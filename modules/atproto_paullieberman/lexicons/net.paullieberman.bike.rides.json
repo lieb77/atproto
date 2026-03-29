@@ -1,0 +1,24 @@
+{
+  "lexicon": 1,
+  "id": "net.paullieberman.bike.ride",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A record of a single bicycle ride.",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["route", "miles", "bike", "date", "createdAt"],
+        "properties": {
+          "route": { "type": "string" },
+          "miles": { "type": "integer" },
+          "bike": { "type": "string" },
+          "date": { "type": "string", "format": "datetime" },
+          "createdAt": { "type": "string", "format": "datetime" },
+          "body": { "type": "string" },
+          "url": { "type": "string", "format": "uri" }
+        }
+      }
+    }
+  }
+}

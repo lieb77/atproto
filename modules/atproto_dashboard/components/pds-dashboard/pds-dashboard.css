@@ -1,0 +1,62 @@
+/* Tab Navigation */
+.pds-dashboard .tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--maple-bg-card);
+}
+
+.pds-dashboard .tab-link {
+  background: var(--maple-bg-content);
+  border: 1px solid var(--maple-bg-card);
+  border-bottom: none;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  border-radius: 4px 4px 0 0;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.pds-dashboard .tab-link:hover {
+  background: var(--maple-bg-card);
+}
+
+.pds-dashboard .tab-link.active {
+  background: var(--maple-bg-card);
+  color: var(--maple-link-base);
+  font-weight: bold;
+  border-bottom: 2px solid var(--maple-link-base);
+}
+
+/* HTMX Transitions & Indicators */
+/* Use this if you have an element with class .htmx-indicator in your HTML */
+.htmx-indicator { display: none; }
+.htmx-request .htmx-indicator { display: inline; }
+
+/* Feedback when a row is being updated/deleted */
+.pds-row.htmx-request {
+  opacity: 0.6;
+  filter: grayscale(50%);
+  cursor: wait;
+}
+
+/* Smooth fade when switching tabs */
+#pds-active-view {
+  transition: opacity 200ms ease-in;
+}
+#pds-active-view.htmx-added {
+  opacity: 0;
+}
+
+/* Row Styling & Status Colors */
+.pds-row {
+  color: var(--maple-text-content);
+  transition: opacity 250ms ease-in-out, background-color 250ms ease-in-out;
+  /* Applying border to TR works in many modern browsers if border-collapse is set correctly */
+  border-left: 6px solid transparent; 
+}
+
+.pds-row.status-synced    { border-left-color: #28a745; }
+.pds-row.status-archived  { border-left-color: #ffc107; }
+.pds-row.status-remote    { border-left-color: #007bff; }
+.pds-row.status-untracked { border-left-color: #6c757d; }

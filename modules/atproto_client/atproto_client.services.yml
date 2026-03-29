@@ -1,0 +1,14 @@
+services:
+
+  atproto_client.endpoints:
+    class: Drupal\atproto_client\EndPoints
+
+  atproto_client.client:
+    class: Drupal\atproto_client\Client\AtprotoClient
+    arguments:
+      - '@logger.channel.atproto'
+      - '@config.factory'
+      - '@key.repository'
+      - '@http_client'
+      - '@tempstore.private'
+      - '@atproto_client.endpoints'

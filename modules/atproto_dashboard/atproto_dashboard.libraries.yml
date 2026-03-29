@@ -1,0 +1,7 @@
+atproto_dashboard:
+  version: VERSION
+  dependencies:
+    - core/htmx
+    - core/drupal
+    - core/drupal.htmx
+    

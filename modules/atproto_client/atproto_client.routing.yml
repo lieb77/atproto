@@ -1,0 +1,9 @@
+atproto_client.settings:
+  path: '/admin/config/services/atproto-settings'
+  defaults:
+    _title: 'AT Protocol Client Settings'
+    _form: 'Drupal\atproto_client\Form\SettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
+
+  

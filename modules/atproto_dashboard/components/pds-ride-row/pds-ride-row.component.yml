@@ -1,0 +1,23 @@
+'$schema': 'https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/modules/sdc/src/metadata.schema.json'
+name: PDS Ride Row 
+status: stable
+description: Ride row
+props:
+  type: object
+  properties:
+    uid:
+      type: number
+      title: UID
+    ride:
+      type: array
+      label: "Ride"
+      items:
+        date:
+          type: string
+          title: Date
+        text:
+          type: string
+          title: Text
+        url:
+          type: string
+          title: URL

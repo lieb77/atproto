@@ -1,0 +1,6 @@
+atproto_dashboard.dashboard:
+  title: ATproto Dashboard
+  description: Manage ATproto synchronization to the PDS
+  parent: system.admin_content
+  route_name: atproto_dashboard.dashboard
+  weight: 50 

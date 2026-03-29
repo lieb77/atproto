@@ -1,0 +1,39 @@
+
+<tr id="ride-{{ ride.rkey }}" class="pds-row {{ ride.sync_meta.class }} htmx-swapping">
+	<td>{{ ride.route }}</td>
+	{# Drupal Twig filter handles the ISO string to "Mar 13, 2026" #}
+	<td>{{ ride.date|date("M j, Y") }}</td>
+	<td>{{ ride.miles }}</td>
+	<td>{{ ride.bike }}</td>
+
+	{# Status Column #}
+	<td>
+	  <span class="badge {{ ride.sync_meta.class }}">
+		{{ ride.sync_meta.label }}
+	  </span>
+	</td>
+
+	{# Actions Column #}
+	<td>
+	  <div class="button-group">
+		{% if ride.sync_meta.status != 'synced' %}
+		 	<button data-hx-post="/pds-sync/update/{{ ride.rkey }}"
+        		data-hx-target="closest tr"
+        		data-hx-swap="outerHTML"
+        		class="button--small">
+  			  Sync
+			</button>
+		{% endif %}
+
+		<button data-hx-delete="/pds-sync/delete/{{ ride.rkey }}"
+            data-hx-target="#ride-{{ ride.rkey }}"
+            data-hx-swap="outerHTML"
+            data-hx-confirm="Delete from PDS?"
+            class="button--danger button--small">
+          Delete
+        </button>
+
+	  </div>
+	</td>
+  </tr>
+

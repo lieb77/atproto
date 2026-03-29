@@ -1,0 +1,7 @@
+name: 'Standard Site'
+type: module
+description: 'Format Drupal entities with site.standard.documenet lexicon'
+package: Custom
+core_version_requirement: ^11.3
+dependencies:
+  - atproto_client:client

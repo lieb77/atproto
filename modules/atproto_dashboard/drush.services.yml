@@ -1,0 +1,6 @@
+services:
+ pds_sync.commands:
+    class: \Drupal\pds_sync\Drush\Commands\SyncDrushCommands
+    arguments: ['@entity_type.manager', '@pds_sync.repository' ]
+    tags:
+      - { name: drush.command }

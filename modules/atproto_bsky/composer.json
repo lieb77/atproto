@@ -1,0 +1,10 @@
+{
+    "name": "lieb/pds_sync",
+    "description": "ATProto PDS Management for Drupal",
+    "type": "drupal-custom-module",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "drupal/core": "^10 || ^11",
+        "drupal/key": "^1.20.0"
+    }
+}

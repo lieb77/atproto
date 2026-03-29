@@ -1,0 +1,11 @@
+services:
+      
+  atproto_paullieberman.service:
+    class: Drupal\atproto_paullieberman\AtprotoPaullieberman
+    arguments:
+      - '@atproto_client.client'
+      - '@state'
+      - '@entity_type.manager'
+      - '@logger.channel.atproto'
+      - '@datetime.time'
+ 

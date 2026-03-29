@@ -1,0 +1,6 @@
+atproto.settings:
+  title: Atproto Settings
+  description: Configure Atproto
+  parent: system.admin_config_services
+  route_name: atproto.settings
+  weight: 10

@@ -1,0 +1,10 @@
+{
+    "name": "lieb/atproto",
+    "description": "ATProto Management for Drupal",
+    "type": "drupal-custom-module",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "drupal/core": "^11.3",
+        "drupal/key": "^1.22"
+    }
+}

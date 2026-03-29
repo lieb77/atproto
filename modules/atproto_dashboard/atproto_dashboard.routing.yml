@@ -1,0 +1,39 @@
+atproto_dashboard.dashboard:
+  path: '/atproto/dashboard'
+  defaults:
+    _controller: '\Drupal\atproto_dashboard\Controller\AtprotoDashboardController::dashboardShell'
+    _title: 'ATptoto Dashboard'
+  requirements:
+    _permission: 'administer pds sync'
+
+atproto_dashboard.drupal_view:
+  path: '/atproto/dashboard/drupal-view'
+  defaults:
+    _controller: '\Drupal\atproto_dashboard\Controller\AtprotoDashboardController::drupalView'
+  requirements:
+    _permission: 'administer pds sync'
+
+atproto_dashboard.pds_view:
+  path: '/atproto/dashboard/pds-view'
+  defaults:
+    _controller: '\Drupal\atproto_dashboard\Controller\AtprotoDashboardController::pdsView'
+  requirements:
+    _permission: 'administer pds sync'
+    
+atproto_dashboard.update:
+  path: '/atproto/dashboard/update/{rkey}'
+  defaults:
+    _controller: '\Drupal\atproto_dashboard\Controller\AtprotoDashboardController::update'
+  requirements:
+    _permission: 'administer pds sync'
+
+atproto_dashboard.delete:
+  path: '/atproto/dashboard/delete/{rkey}'
+  defaults:
+    _controller: '\Drupal\atproto_dashboard\Controller\AtprotoDashboardController::delete'
+  requirements:
+    _permission: 'administer pds sync'
+  methods: [DELETE]
+  
+
+  

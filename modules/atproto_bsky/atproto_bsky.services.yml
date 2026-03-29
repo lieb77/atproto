@@ -1,0 +1,10 @@
+services:
+
+  atproto_bsky.service:
+    class: Drupal\atproto_bsky\AtprotoBsky
+    arguments:
+      - '@atproto_client.client'
+      - '@entity_type.manager'
+      - '@logger.channel.atproto'
+      - '@datetime.time'
+ 

@@ -1,0 +1,13 @@
+services:
+
+  pds_sync.controller:
+    class: Drupal\atproto_dashboard\Controller\AtprotoDashboardController
+
+  atproto_dashboard.dashboard:
+    class: Drupal\atproto_dashboard\AtprotoDashboard
+    arguments: 
+      - '@entity_type.manager'
+      - '@state'
+      - '@pds_sync.repository'
+      - '@datetime.time'
+      - '@logger.channel.atproto'

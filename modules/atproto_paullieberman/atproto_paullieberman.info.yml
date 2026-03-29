@@ -1,0 +1,8 @@
+name: 'Atptoto Paullieberman'
+type: module
+description: 'ATproto management for the net.paullieberman. namespace'
+package: Custom
+core_version_requirement: ^11.3
+dependencies:
+  - atproto_client:client
+

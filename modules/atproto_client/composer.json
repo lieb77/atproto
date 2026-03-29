@@ -1,0 +1,10 @@
+{
+    "name": "lieb/atproto_client",
+    "description": "ATProto Client for Drupal",
+    "type": "drupal-custom-module",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "drupal/core": "^11",
+        "drupal/key": "^1.20.0"
+    }
+}

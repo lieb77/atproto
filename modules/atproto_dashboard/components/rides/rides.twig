@@ -1,0 +1,32 @@
+{#
+/**
+ *
+ */
+#}
+
+{{ attach_library('core/htmx') }}
+<div class="pds-rides">
+  {% if rides is not empty %}
+    <table>
+      <thead>
+        <tr>
+          <th>Route</th>
+          <th>Date</th>
+          <th>Miles</th>
+          <th>Bike</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ride in rides %}
+        	{% include "pds_sync:pds-ride-row" with {
+        		ride: ride
+        	} only  %}        
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No rides found on the PDS.</p>
+  {% endif %}
+</div>

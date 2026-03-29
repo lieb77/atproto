@@ -1,0 +1,211 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\atproto_bsky;
+
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\Core\Mail\MailFormatHelper;
+use Drupal\node\NodeInterface;
+use Drupal\atproto_client\Client\AtprotoClient;
+
+/**
+ * Manages Bluesky timeline posts, syndication entities, and webmention backfeed.
+ */
+class AtprotoBsky {
+
+    protected $did;
+
+    public function __construct(
+        protected AtprotoClient $atprotoClient,
+        protected EntityTypeManagerInterface $entityTypeManager,
+        protected LoggerChannelInterface $logger,
+    ) {
+        $this->did = $atprotoClient->getDid();
+    }
+
+    /**
+     * Posts a ride to the public Bluesky timeline.
+     */
+    public function postRideToTimeline(NodeInterface $node): mixed {
+        $this->logger->info("Starting postRideToTimeline");
+        $rideDateRaw = $node->get('field_ridedate')->value;
+        $textParts = [
+            "🚲Lieb's Ride Log🚲",
+            "Route: " . $node->label(),
+            "Date: " . $rideDateRaw,
+            "Distance: " . $node->get('field_miles')->value . " miles",
+            "Bike: " . ($node->get('field_bike')->entity?->label() ?? 'N/A'),
+            "",
+            "#bicycle #bikeride #bikepacking",
+        ];
+
+        $text = implode("\n", $textParts);
+        $facets = $this->createTagFacets($text, ['bicycle', 'bikeride', 'bikepacking']);
+        $uri = $node->toUrl()->setAbsolute()->toString();
+
+        $postRecord = [
+            'repo' => $this->did,
+            'collection' => 'app.bsky.feed.post',
+            'record' => [
+                '$type' => 'app.bsky.feed.post',
+                'text' => $text,
+                'facets' => $facets,
+                'createdAt' => date('c', strtotime($rideDateRaw)),
+                'tags' => ['lieb-ride-log'],
+                'embed' => [
+                    '$type' => 'app.bsky.embed.external',
+                    'external' => [
+                        'uri' => $uri,
+                        'title' => "Ride: " . $node->label(),
+                        'description' => MailFormatHelper::htmlToText($node->body->value),
+                    ],
+                ],
+            ],
+        ];
+
+        $response = $this->atprotoClient->createRecord($postRecord);
+        
+        if (isset($response->uri)) {
+        	$this->logger->info("Ride posted to @uri",["@uri" => $response->uri]);
+            $this->createSyndicationEntity((int) $node->id(), $response->uri);
+        }
+        return $response;
+    }
+
+	public function getWebmentions(){
+
+		 $syndications = $this->getSyndications();
+
+		foreach ($syndications as $syndication) {
+			if (!empty($syndication['at_uri'])) {
+			$this->logger->info("Checking syndication of node @nid for webmentions.", [
+				'@nid' => $syndication['nid']
+			]);
+			$this->checkForWebmentions($syndication);
+			}
+		}
+	}
+
+
+    public function checkForWebmentions(array $syndication): void {
+        $atUri = $syndication['at_uri'];
+        $node = $this->entityTypeManager->getStorage('node')->load($syndication['nid']);
+        $target_path = $node->toUrl()->toString();
+
+        $wmValues = [
+            'source' => "https://bsky.app/profile/paullieberman.net/post/" . basename($atUri),
+            'target' => $target_path,
+            'type' => "entry",
+        ];
+
+        $response = $this->atprotoClient->getPostThread($atUri);
+
+        if (isset($response->thread->post)) {
+            $post = $response->thread->post;
+            if ($post->replyCount > 0) { $this->processReplies($response->thread->replies, $wmValues); }
+            if ($post->likeCount > 0) { $this->processLikes($atUri, $wmValues); }
+           // if ($post->repostCount > 0) { $this->processReposts($atUri, $wmValues); }
+        }
+    }
+
+ 	public function getSyndications(): array {
+        $syndications = [];
+        $storage = $this->entityTypeManager->getStorage('indieweb_syndication');
+        $ids = $storage->getQuery()->accessCheck(FALSE)->execute();
+        foreach ($storage->loadMultiple($ids) as $synd) {
+            $syndications[] = [
+                'url' => $synd->get('url')->value,
+                'nid' => $synd->get('entity_id')->value,
+                'at_uri' => $synd->get('at_uri')->value,
+            ];
+        }
+        return $syndications;
+    }
+
+    private function processReplies(array $replies, array $wmValues): void {
+        foreach ($replies as $reply) {
+            $post = $reply->post;
+            $author = $post->author;
+            $source = "https://bsky.app/profile/{$author->handle}/post/" . basename($post->uri);
+
+            $this->saveIfNew(array_merge($wmValues, [
+                'source' => $source,
+                'property' => 'in-reply-to',
+                'author_name' => $author->displayName ?: $author->handle,
+                'author_url' => "https://bsky.app/profile/{$author->handle}",
+                'author_photo' => $author->avatar ?? '',
+                'content_text' => $post->record->text,
+                'status' => 1,
+            ]));
+        }
+    }
+
+    private function processLikes(string $atUri, array $wmValues): void {
+        $response = $this->atprotoClient->getLikes($atUri);
+        foreach ($response->likes as $like) {
+            $source = "https://bsky.app/profile/{$like->actor->handle}";
+            $this->saveIfNew(array_merge($wmValues, [
+                'source' => $source,
+                'property' => 'like-of',
+                'author_name' => $like->actor->displayName ?: $like->actor->handle,
+                'author_url' => $source,
+                'author_photo' => $like->actor->avatar ?? '',
+                'status' => 1,
+            ]));
+        }
+    }
+
+   //  private function processReposts(string $atUri, array $wmValues): void {
+//         $response = $this->atprotoClient->request('GET', "/xrpc/app.bsky.feed.getRepostedBy", ['query' => ['uri' => $atUri]]);
+//         foreach ($response->repostedBy as $actor) {
+//             $source = "https://bsky.app/profile/{$actor->handle}";
+//             $this->saveIfNew(array_merge($wmValues, [
+//                 'source' => $source,
+//                 'property' => 'repost-of',
+//                 'author_name' => $actor->displayName ?: $actor->handle,
+//                 'author_url' => $source,
+//                 'author_photo' => $actor->avatar ?? '',
+//                 'status' => 1,
+//             ]));
+//         }
+//     }
+
+    private function saveIfNew(array $values): void {
+        $storage = $this->entityTypeManager->getStorage('indieweb_webmention');
+        $existing = $storage->loadByProperties(['source' => $values['source'], 'target' => $values['target']]);
+        if (empty($existing)) {
+            $storage->create($values)->save();
+        }
+    }
+
+    private function createTagFacets(string $text, array $tags): array {
+        $facets = [];
+        foreach ($tags as $tag) {
+            $search = '#' . $tag;
+            $pos = strpos($text, $search);
+            if ($pos !== FALSE) {
+                $facets[] = [
+                    'index' => ['byteStart' => $pos, 'byteEnd' => $pos + strlen($search)],
+                    'features' => [['$type' => 'app.bsky.richtext.facet#tag', 'tag' => $tag]],
+                ];
+            }
+        }
+        return $facets;
+    }
+
+    private function createSyndicationEntity(int $nid, string $atUri): void {
+        $rkey = end(explode('/', $atUri));
+        $url = "https://bsky.app/profile/paullieberman.net/post/{$rkey}";
+        $this->entityTypeManager->getStorage('indieweb_syndication')->create([
+            'entity_id' => $nid,
+            'entity_type_id' => 'node',
+            'url' => $url,
+            'at_uri' => $atUri,
+        ])->save();
+        $this->logger->info("Syndication saved for node @nid",["@nid" => $nid]);
+    }
+
+ 
+}

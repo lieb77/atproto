@@ -1,0 +1,4 @@
+administer Atproto:
+  title: 'Administer Atproto'
+  description: 'Allows users to configure credentials for the AT Protocol'
+  restrict access: true
