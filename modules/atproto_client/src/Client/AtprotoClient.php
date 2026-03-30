@@ -4,81 +4,36 @@ declare(strict_types=1);
 
 namespace Drupal\atproto_client\Client;
 
+use Drupal\atproto_core\AtprotoLoggerTrait;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
-use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\key\KeyRepositoryInterface;
 use GuzzleHttp\ClientInterface;
 use Drupal\atproto_client\Endpoints;
-// use Drupal\atproto_client\Client\AtprotoClientInterface; 
+
 
 /**
- * The AtprotoClient class implements the core services of this module.
+ * The AtprotoClient class.
  */
-class AtprotoClient // implements AtprotoClientInterface 
-{
+class AtprotoClient {
 
-    /**
-     * Immutable settings snapshot.
-     *
-     * @var \Drupal\Core\Config\ImmutableConfig
-     */
+	use AtprotoLoggerTrait;
+	
     protected ImmutableConfig $settings;
-
-    /**
-     * The Decentralized Identifier.
-     *
-     * @var string|null
-     */
     protected ?string $did;
-
-    /**
-     * The handle.
-     *
-     * @var string|null
-     */
     protected ?string $handle;
-
-    /**
-     * The session data.
-     *
-     * @var object|null
-     */
     protected ?object $session = NULL;
-
-    /**
-     * The tempstore factory.
-     *
-     * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
-     */
-    protected    $tempstore;
-
-    /**
-     * The PDS URL.
-     *
-     * @var string
-     */
+    protected $tempstore;
     protected string $pdsUrl;
 
     /**
      * Constructs a new AtprotoClient object.
      *
-     * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
-     *   The logger channel.
-     * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-     *   The config factory.
-     * @param \Drupal\key\KeyRepositoryInterface $keyRepository
-     *   The key repository.
-     * @param \GuzzleHttp\ClientInterface $httpClient
-     *   The HTTP client.
-     * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $tempStore
-     *   The tempstore factory.
-     * @param \Drupal\atproto_client\EndPoints $endpoints
-     *   The endpoints service.
      */
     public function __construct(
-        protected LoggerChannelInterface $logger,
+        protected LoggerChannelFactoryInterface $loggerFactory,
         protected ConfigFactoryInterface $configFactory,
         protected KeyRepositoryInterface $keyRepository,
         protected ClientInterface $httpClient,
@@ -86,7 +41,8 @@ class AtprotoClient // implements AtprotoClientInterface
         protected EndPoints $endpoints
     ) {
         $this->tempstore = $tempStore->get('atproto_client');
-
+		$this->setLoggerFactory($loggerFactory);
+		
         // Use the Factory to get our immutable settings.
         $this->settings = $this->configFactory->get('atproto.settings');
 
@@ -151,7 +107,7 @@ class AtprotoClient // implements AtprotoClientInterface
         $session = $this->getSession();
 
         if (!$session) {
-            $this->logger->error("Could not establish a session for $endpoint");
+            $this->logger()->error("Could not establish a session for $endpoint");
             return FALSE;
         }
 
@@ -175,7 +131,7 @@ class AtprotoClient // implements AtprotoClientInterface
             }
         }
         catch (\Exception $e) {
-            $this->logger->error("atproto request to $endpoint failed: " . $e->getMessage());
+            $this->logger()->error("atproto request to $endpoint failed: " . $e->getMessage());
         }
 
         return FALSE;
@@ -208,7 +164,7 @@ class AtprotoClient // implements AtprotoClientInterface
      */
     public function logout(): void {
         $this->tempstore->delete('session');
-        $this->logger->info("Session closed");
+        $this->logger()->info("Session closed");
     }
 
     /*************** Private functions *******************/
@@ -260,10 +216,10 @@ class AtprotoClient // implements AtprotoClientInterface
         );
 
         if ($request->getStatusCode() == 200) {
-            $this->logger->info("Session opened");
+            $this->logger()->info("Session opened");
             return json_decode($request->getBody()->getContents());
         }
-        $this->logger->error("Create session got " . $request->getStatusCode());
+        $this->logger()->error("Create session got " . $request->getStatusCode());
         return FALSE;
     }
 
@@ -287,10 +243,10 @@ class AtprotoClient // implements AtprotoClientInterface
         );
 
         if ($request->getStatusCode() == 200) {
-            $this->logger->info("Session refreshed");
+            $this->logger()->info("Session refreshed");
             return json_decode($request->getBody()->getContents());
         }
-        $this->logger->error("Refresh session got " . $request->getStatusCode());
+        $this->logger()->error("Refresh session got " . $request->getStatusCode());
         return FALSE;
     }
 
@@ -310,8 +266,8 @@ class AtprotoClient // implements AtprotoClientInterface
         // This is public, so we can do it before have a session.  
         $request = $this->httpClient->request(
             'GET',
-            "https://bsky.social/xrpc/com.atproto.identity.resolveHandle",
-            [
+             $this->pdsUrl . "/xrpc/com.atproto.identity.resolveHandle",
+             [ 
                 'query' => [
                     'handle' => $handle,
                 ],
@@ -356,7 +312,7 @@ class AtprotoClient // implements AtprotoClientInterface
     	        'json' => $params,
         	]);
         }catch (\Exception $e) { 
-			$this->logger->error("PutRecord failed with @err", ["@err" => $e]);
+			$this->logger()->error("PutRecord failed with @err", ["@err" => $e]);
 			return FALSE;
         }
     }
@@ -374,9 +330,16 @@ class AtprotoClient // implements AtprotoClientInterface
      * shorthand for com.atproto.repo.listRecords (GET)
      */
     public function listRecords(array $params): mixed {
-       return $this->request('GET', $this->endpoints->listRecords(), [
-            'query' => $params,
-        ]);
+		try { 	
+       		$response = $this->request('GET', $this->endpoints->listRecords(), [
+            	'query' => $params,
+        	]);
+        	return $response;
+        }
+        catch(\Exception $e) {
+        	return FALSE;
+        }
+        
     }
 
     /**

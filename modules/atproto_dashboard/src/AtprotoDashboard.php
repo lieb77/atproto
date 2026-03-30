@@ -1,78 +1,98 @@
 <?php
 declare(strict_types=1);
 
-namespace Drupal\pds_sync;
+namespace Drupal\atproto_dashboard;
 
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\State\StateInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\node\NodeInterface;
-use Drupal\pds_sync\PdsRepository;
+use Drupal\atproto_core\AtprotoLoggerTrait;
+use Drupal\atproto_client\Client\AtprotoClient;
 
 /**
  * Orchestrates the synchronization between Drupal Nodes and the PDS.
  */
-class PdsSyncManager {
+class AtprotoDashboard {
 
-    /**
-     * Constructs a new PdsSyncManager object.
-     *
-     * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-     *   The entity type manager.
-     * @param \Drupal\Core\State\StateInterface $state
-     *   The state service.
-     * @param \Drupal\pds_sync\PdsRepository $pdsRepository
-     *   The PDS repository.
-     * @param \Drupal\Component\Datetime\TimeInterface $time
-     *   The time service.
-     */
+    use AtprotoLoggerTrait;
+    
     public function __construct(
-        protected EntityTypeManagerInterface $entityTypeManager,
-        protected StateInterface $state,
-        protected PdsRepository $pdsRepository,
-        protected TimeInterface $time,
-    ) {}
-
-    /**
-     * Fetches the most recent rides from Drupal.
-     *
-     * @param int $limit
-     *   The number of rides to fetch.
-     *
-     * @return \Drupal\node\NodeInterface[]
-     *   An array of ride nodes.
-     */
-    public function getRecentRides(int $limit = 10): array {
-        $storage = $this->entityTypeManager->getStorage('node');
-        $query = $storage->getQuery()
-            ->condition('type', 'ride')
-            ->condition('status', 1)
-            ->sort('field_ridedate', 'DESC')
-            ->range(0, $limit)
-            ->accessCheck(TRUE);
-
-        $nids = $query->execute();
-        return $storage->loadMultiple($nids);
+        protected AtprotoClient $atprotoClient,
+        protected LoggerChannelFactoryInterface $loggerFactory
+    ) {
+    	$this->setLoggerFactory($loggerFactory);
     }
 
-    /**
-     * Finds a local ride node by its PDS rkey (UUID).
-     *
-     * @param string $rkey
-     *   The PDS rkey (UUID).
-     *
-     * @return \Drupal\node\NodeInterface|null
-     *   The ride node, or NULL if not found.
-     */
-    public function getLocalNodeByRkey(string $rkey): ?NodeInterface {
-        $nodes = $this->entityTypeManager->getStorage('node')->loadByProperties([
-            'uuid' => $rkey,
-            'type' => 'ride', // Ensuring we only look at ride nodes
-        ]);
+	/**
+	 * List ride records
+	 *
+	 */
+	public function listRideRecords() {
+      	$records = [];
+        $cursor = NULL;
 
-        return $nodes ? reset($nodes) : NULL;
-    }
+		do {
+			$query = [
+				'repo' 		 => $this->atprotoClient->getDid(), 
+				'collection' => 'net.paullieberman.bike.ride', 
+				 'limit' 	 => 100
+			];
+			if ($cursor) {
+					$query['cursor'] = $cursor;
+			}
 
+			$response = $this->atprotoClient->listRecords($query);
+			$records  = array_merge($records, $response->records);
+			$cursor   = $response->cursor ?? NULL;
+		} while ($cursor);
+		
+		$rides = array_map(function ($record) {
+        	$record_array = (array) $record->value;
+            $record_array['rkey'] = basename($record->uri);
+            return $record_array;
+        }, $records);
+
+        usort($rides, fn($a, $b) => strcmp($b['date'], $a['date']));
+        return $rides;
+
+   }
+   
+   
+   /**
+	 * List doc records
+	 *
+	 */
+	public function listDocRecords() {
+      	$records = [];
+        $cursor = NULL;
+
+		do {
+			$query = [
+				'repo' 		 => $this->atprotoClient->getDid(), 
+				'collection' => 'site.standard.document', 
+				 'limit' 	 => 100
+			];
+			if ($cursor) {
+					$query['cursor'] = $cursor;
+			}
+
+			$response = $this->atprotoClient->listRecords($query);
+			$records  = array_merge($records, $response->records);
+			$cursor   = $response->cursor ?? NULL;
+		} while ($cursor);
+		
+		$docs = array_map(function ($record) {
+        	$record_array = (array) $record->value;
+            $record_array['rkey'] = basename($record->uri);
+            return $record_array;
+        }, $records);
+
+  //      usort($rides, fn($a, $b) => strcmp($b['date'], $a['date']));
+        return $docs;
+
+   }
+   
+
+   
     /**
      * Checks the local sync state for a given node.
      *

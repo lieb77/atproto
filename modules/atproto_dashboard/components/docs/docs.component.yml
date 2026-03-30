@@ -1,16 +1,16 @@
 '$schema': 'https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/modules/sdc/src/metadata.schema.json'
-name: Atproto Dashboard Rides 
+name: Atproto Dashboard Docs 
 status: stable
-description: Rides list
+description: Docs list
 props:
   type: object
   properties:
     uid:
       type: number
       title: UID
-    ride:
+    doc:
       type: array
-      label: "Ride"
+      label: "Doc"
       items:
         date:
           type: string

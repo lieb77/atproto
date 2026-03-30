@@ -5,6 +5,6 @@ services:
     arguments:
       - '@atproto_client.client'
       - '@entity_type.manager'
-      - '@logger.channel.atproto'
+      - '@logger.factory'
       - '@datetime.time'
  

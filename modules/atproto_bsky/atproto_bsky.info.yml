@@ -1,7 +1,8 @@
 name: 'ATProto Bsky'
 type: module
 description: 'Create app.bsky.feed.post records'
-package: Custom
+package: Atproto
 core_version_requirement: ^11.3
 dependencies:
-  - atproto:atproto_client
+  - atproto:atproto
+  - atproto_client:atproto_client

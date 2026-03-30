@@ -6,7 +6,7 @@ services:
   atproto_client.client:
     class: Drupal\atproto_client\Client\AtprotoClient
     arguments:
-      - '@logger.channel.atproto'
+      - '@logger.factory'
       - '@config.factory'
       - '@key.repository'
       - '@http_client'

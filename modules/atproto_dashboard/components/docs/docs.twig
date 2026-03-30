@@ -1,30 +1,29 @@
 {#
 /**
- * Rides
+ * site,standard.document 
  */
 #}
-
 {{ attach_library('core/htmx') }}
 <div class="pds-rides">
-  {% if rides is not empty %}
+  {% if docs is not empty %}
     <table>
       <thead>
         <tr>
           <th>Collection</th>
           <th>Rkey</th>
-          <th>Created</th>
-          <th>URL</th>
+          <th>Published</th>
+          <th>Title</th>
         </tr>
       </thead>
       <tbody>
-        {% for ride in rides %}
-        	{% include "atproto_dashboard:ride-row" with {
-        		ride: ride
+        {% for doc in docs %}
+        	{% include "atproto_dashboard:doc-row" with {
+        		doc: doc
         	} only  %}        
         {% endfor %}
       </tbody>
     </table>
   {% else %}
-    <p>No rides found on the PDS.</p>
+    <p>No docs found on the PDS.</p>
   {% endif %}
 </div>

@@ -5,17 +5,22 @@
 <div class="pds-dashboard maple-card">
   	<nav class="tabs" data-hx-target="#pds-active-view">
   	
-		<button data-hx-get="/pds-sync/drupal-view" class="tab-link active">
-		  Local Drupal
+		<button data-hx-get="/atproto/dashboard/ride-view" class="tab-link active">
+		  net.paullieberman.bike.ride
 		</button>
 		
-		<button data-hx-get="/pds-sync/pds-view" class="tab-link">
-		  PDS Storage
+		<button data-hx-get="/atproto/dashboard/doc-view" class="tab-link">
+		  site.standard.document
 		</button>
+		
+		<button data-hx-get="/atproto/dashboard/post-view" class="tab-link">
+		  app.bsky.feed.post
+		</button>
+		
   	</nav>
 
  	 <div id="pds-active-view" class="tab-content">
-		{# Initial load will be the Drupal view #}
+		{# Initial load will be the ride view #}
     	{{ initial_view }}
   	</div>
 </div>

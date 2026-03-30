@@ -1,6 +1,6 @@
 {#
 /**
- * Rides
+ *
  */
 #}
 
@@ -18,7 +18,7 @@
       </thead>
       <tbody>
         {% for ride in rides %}
-        	{% include "atproto_dashboard:ride-row" with {
+        	{% include "atproto_dashboard:pds-ride-row" with {
         		ride: ride
         	} only  %}        
         {% endfor %}

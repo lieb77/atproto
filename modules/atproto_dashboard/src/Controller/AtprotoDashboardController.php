@@ -1,86 +1,32 @@
 <?php
-
 declare(strict_types=1);
 
-namespace Drupal\pds_sync\Controller;
+namespace Drupal\atproto_dashboard\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\node\NodeInterface;
-use Drupal\pds_sync\PdsRepository;
-use Drupal\pds_sync\PdsSyncManager;
+use Drupal\atproto_dashboard\AtprotoDashboard;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Returns responses for PDS Sync routes.
  */
-final class PdsSyncController extends ControllerBase {
+final class AtprotoDashboardController extends ControllerBase {
 
-    /**
-     * The renderer service.
-     *
-     * @var \Drupal\Core\Render\RendererInterface
-     */
-    protected RendererInterface $renderer;
-
-    /**
-     * The PDS Sync manager service.
-     *
-     * @var \Drupal\pds_sync\PdsSyncManager
-     */
-    protected PdsSyncManager $pdsSyncManager;
-
-    /**
-     * The PDS repository service.
-     *
-     * @var \Drupal\pds_sync\PdsRepository
-     */
-    protected PdsRepository $pdsRepository;
-
-    /**
-     * The date formatter service.
-     *
-     * @var \Drupal\Core\Datetime\DateFormatterInterface
-     */
-    protected DateFormatterInterface $dateFormatter;
-
-    /**
-     * The entity type manager service.
-     *
-     * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-     */
-    protected EntityTypeManagerInterface $nodeManager;
-
+ 
     /**
      * The controller constructor.
-     *
-     * @param \Drupal\Core\Render\RendererInterface $renderer
-     *   The renderer service.
-     * @param \Drupal\pds_sync\PdsSyncManager $pdsSyncManager
-     *   The PDS Sync manager service.
-     * @param \Drupal\pds_sync\PdsRepository $pdsRepository
-     *   The PDS repository service.
-     * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
-     *   The date formatter service.
-     * @param \Drupal\Core\Entity\EntityTypeManagerInterface $nodeManager
-     *   The entity type manager service.
+ 	 *
      */
     public function __construct(
-        RendererInterface $renderer,
-        PdsSyncManager $pdsSyncManager,
-        PdsRepository $pdsRepository,
-        DateFormatterInterface $dateFormatter,
-        EntityTypeManagerInterface $nodeManager
-    ) {
-        $this->renderer = $renderer;
-        $this->pdsSyncManager = $pdsSyncManager;
-        $this->pdsRepository = $pdsRepository;
-        $this->dateFormatter = $dateFormatter;
-        $this->nodeManager = $nodeManager;
-    }
+        private readonly RendererInterface $renderer,       
+        private readonly DateFormatterInterface $dateFormatter,
+        private readonly AtprotoDashboard $atprotoDashboard,
+    ) { }
 
     /**
      * {@inheritdoc}
@@ -88,10 +34,8 @@ final class PdsSyncController extends ControllerBase {
     public static function create(ContainerInterface $container): self {
         return new self(
             $container->get('renderer'),
-            $container->get('pds_sync.manager'),
-            $container->get('pds_sync.repository'),
             $container->get('date.formatter'),
-            $container->get('entity_type.manager')
+            $container->get('atproto_dashboard.dashboard')
         );
     }
 
@@ -99,33 +43,21 @@ final class PdsSyncController extends ControllerBase {
      * PDS Admin Dashboard.
      */
     public function dashboardShell(): array {
-        // 1. Keep your existing logic to generate the initial "Local Drupal" list
-        $nodes = $this->pdsSyncManager->getRecentRides(25);
-    $pds_rides = $this->pdsRepository->getRides();
+  		
+  		$rides = $this->atprotoDashboard->listRideRecords();
 
-        $rides = [];
-        foreach ($nodes as $node) {
-            $rides[] = [
-                'route' => $node->label(),
-                'date' => $node->get('field_ridedate')->value,
-                'miles' => $node->get('field_miles')->value,
-                'bike' => $node->get('field_bike')->entity?->label(),
-                'rkey' => $node->uuid(),
-                'sync_meta' => $this->pdsSyncManager->getReconciledStatus($node, $pds_rides),
-            ];
-        }
-
-        // 2. Render the initial table as a fragment for the shell
+        // Render the initial table as a fragment for the shell
         $initial_table = [
-            '#type' => 'component',
-            '#component' => 'pds_sync:rides',
-            '#props' => ['rides' => $rides],
+            '#type' 	 => 'component',
+            '#component' => 'atproto_dashboard:rides',
+            '#props' 	 => ['rides' => $rides],
         ];
 
-        // 3. Return the Tabbed Shell SDC
+		
+        // Return the Tabbed Shell SDC
         return [
             '#type' => 'component',
-            '#component' => 'pds_sync:pds-dashboard', // The new wrapper SDC
+            '#component' => 'atproto_dashboard:pds-dashboard',
             '#props' => [
                 'initial_view' => $this->renderer->renderInIsolation($initial_table),
             ],
@@ -133,60 +65,30 @@ final class PdsSyncController extends ControllerBase {
     }
 
     /**
-     * Drupal View.
+     * Ride  View.
      */
-    public function drupalView(): Response {
-        $nodes = $this->pdsSyncManager->getRecentRides(25);
-        $pds_rides = $this->pdsRepository->getRides();
+    public function rideView(): Response {
 
-        $rows = [];
-        foreach ($nodes as $node) {
-            $rows[] = $this->prepareRideData($node, $pds_rides);
-        }
-
+		$rides = $this->atprotoDashboard->listRideRecords();
         $build = [
-            '#type' => 'component',
-            '#component' => 'pds_sync:rides',
-            '#props' => [
-                'rides' => $rows,
-                'view_mode' => 'local',
-            ],
+            '#type' 	 => 'component',
+            '#component' => 'atproto_dashboard:rides',
+            '#props' 	 => ['rides' => $rides],
         ];
 
         return new Response(trim((string) $this->renderer->renderInIsolation($build)));
     }
 
     /**
-     * PDS View.
+     * Doc View.
      */
-    public function pdsView(): Response {
-        $pds_rides = $this->pdsRepository->getRides();
+    public function docView(): Response {
 
-        $rows = [];
-        foreach ($pds_rides as $pds_ride) {
-            // 1. Check if we have this locally
-            $local_node = $this->pdsSyncManager->getLocalNodeByRkey($pds_ride['rkey']);
-
-            // 2. Build the full object for the SDC, keeping your existing PDS fields
-            $rows[] = [
-                'route' => $pds_ride['route'],
-                'date' => $pds_ride['date'],
-                'miles' => $pds_ride['miles'] ?? '--', // Pass through from PDS
-                'bike' => $pds_ride['bike'] ?? 'Unknown', // Pass through from PDS
-                'rkey' => $pds_ride['rkey'],
-                // Normalize the status so the Twig template gets the right classes
-                'sync_meta' => [
-                    'status' => $local_node ? 'synced' : 'remote-only',
-                    'label' => $local_node ? 'Synced' : 'PDS Only',
-                    'class' => $local_node ? 'status-synced' : 'status-remote',
-                ],
-            ];
-        }
-
+		$docs = $this->atprotoDashboard->listDocRecords();
         $build = [
             '#type' => 'component',
-            '#component' => 'pds_sync:rides',
-            '#props' => ['rides' => $rows],
+            '#component' => 'atproto_dashboard:docs',
+            '#props' => ['docs' => $docs],
         ];
 
         return new Response(trim((string) $this->renderer->renderInIsolation($build)));

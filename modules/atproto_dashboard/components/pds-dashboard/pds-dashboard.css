@@ -60,3 +60,20 @@
 .pds-row.status-archived  { border-left-color: #ffc107; }
 .pds-row.status-remote    { border-left-color: #007bff; }
 .pds-row.status-untracked { border-left-color: #6c757d; }
+
+
+.pds-rides table {
+	border: 1px solid #ccc;
+	border-collapse: collapse;
+	padding .5rem;
+}
+.pds-rides tr,
+.pds-rides th, 
+.pds-rides td {
+	border: 1px solid #ccc;
+	padding: .2em .5em;
+}
+
+.pds-rides th {
+	border-bottom: 2px solid #000;
+}

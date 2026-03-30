@@ -1,8 +1,8 @@
 name: 'Atproto Dashboard'
 type: module
 description: 'Atproto PDS Management for Drupal'
-package: Custom
+package: Atproto
 core_version_requirement: ^11.3
 dependencies:
-  - atproto_client:client
-
+  - atproto:atproto
+  - atproto_client:atproto_client
