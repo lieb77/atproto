@@ -3,12 +3,12 @@
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--maple-bg-card);
+  border-bottom: 1px solid #777;
 }
 
 .pds-dashboard .tab-link {
-  background: var(--maple-bg-content);
-  border: 1px solid var(--maple-bg-card);
+  background: #eee;
+  border: 1px solid #777;
   border-bottom: none;
   padding: 0.75rem 1.25rem;
   cursor: pointer;
@@ -18,14 +18,14 @@
 }
 
 .pds-dashboard .tab-link:hover {
-  background: var(--maple-bg-card);
+  background: #ccc;
 }
 
 .pds-dashboard .tab-link.active {
-  background: var(--maple-bg-card);
-  color: var(--maple-link-base);
+  background: #ccc;
+  color: #000;
   font-weight: bold;
-  border-bottom: 2px solid var(--maple-link-base);
+  border-bottom: 2px solid #777;
 }
 
 /* HTMX Transitions & Indicators */
@@ -63,17 +63,27 @@
 
 
 .pds-rides table {
-	border: 1px solid #ccc;
+	border: 1px solid #777;
 	border-collapse: collapse;
 	padding .5rem;
 }
 .pds-rides tr,
 .pds-rides th, 
 .pds-rides td {
-	border: 1px solid #ccc;
+	border: 1px solid #777;
 	padding: .2em .5em;
 }
 
 .pds-rides th {
 	border-bottom: 2px solid #000;
+}
+
+.pds-rides button {
+	border: 1px solid #999;
+	border-radius: 6px;
+	padding: .2em;
+}
+
+.pds-rides button:hover {
+	background-color: #eee;
 }

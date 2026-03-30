@@ -6,20 +6,27 @@ atproto_dashboard.dashboard:
   requirements:
     _permission: 'administer atproto'
 
-atproto_dashboard.drupal_view:
+atproto_dashboard.ride_view:
   path: '/atproto/dashboard/ride-view'
   defaults:
     _controller: '\Drupal\atproto_dashboard\Controller\AtprotoDashboardController::rideView'
   requirements:
     _permission: 'administer atproto'
 
-atproto_dashboard.pds_view:
+atproto_dashboard.doc_view:
   path: '/atproto/dashboard/doc-view'
   defaults:
     _controller: '\Drupal\atproto_dashboard\Controller\AtprotoDashboardController::docView'
   requirements:
     _permission: 'administer atproto'
-    
+
+atproto_dashboard.post_view:
+  path: '/atproto/dashboard/post-view'
+  defaults:
+    _controller: '\Drupal\atproto_dashboard\Controller\AtprotoDashboardController::postView'
+  requirements:
+    _permission: 'administer atproto'
+      
 atproto_dashboard.update:
   path: '/atproto/dashboard/update/{rkey}'
   defaults:

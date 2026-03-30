@@ -1,30 +1,33 @@
 {#
 /**
- *
+ * Posts - app.bsky.feed.post
  */
+
+{{ dump(posts[3]) }}
 #}
 
 {{ attach_library('core/htmx') }}
 <div class="pds-rides">
-  {% if rides is not empty %}
+  {% if posts is not empty %}
     <table>
       <thead>
         <tr>
-          <th>Collection</th>
           <th>Rkey</th>
           <th>Created</th>
-          <th>URL</th>
+          <th>Type</th>
+          <th>URI or Image ALT</th>
+          <th colspan=3>Actions</th>
         </tr>
       </thead>
       <tbody>
-        {% for ride in rides %}
-        	{% include "atproto_dashboard:pds-ride-row" with {
-        		ride: ride
+        {% for post in posts %}
+        	{% include "atproto_dashboard:post-row" with {
+        		post: post
         	} only  %}        
         {% endfor %}
       </tbody>
     </table>
   {% else %}
-    <p>No rides found on the PDS.</p>
+    <p>No posts found on the PDS.</p>
   {% endif %}
 </div>

@@ -1,40 +1,38 @@
 
 <tr id="doc-{{ doc.rkey }}" class="pds-row {{ doc.sync_meta.class }} htmx-swapping">
-	<td>{{ doc['$type'] }}</td>
 	<td>{{ doc.rkey }}</td>
 	<td>{{ doc.publishedAt|date("M j, Y") }}</td>
 	<td>{{ doc.title }}</td>
+	<td>{{ doc.path }}</td>
 
-{# Status Column 
-	<td>
-	  <span class="badge {{ doc.sync_meta.class }}">
-		{{ doc.sync_meta.label }}
-	  </span>
+{# Actions Column #}
+	
+   <div class="button-group">
+	  <td>
+	    <button data-hx-post="/atproto/dashboard/view/{{ doc.rkey }}"
+			data-hx-target="closest tr"
+			data-hx-swap="outerHTML"
+			class="button--small">
+		 View
+		</button>
 	</td>
-</tr>
-#}
-{# Actions Column 
-	<td>
-	  <div class="button-group">
-		{% if doc.sync_meta.status != 'synced' %}
-		 	<button data-hx-post="/pds-sync/update/{{ doc.rkey }}"
-        		data-hx-target="closest tr"
-        		data-hx-swap="outerHTML"
-        		class="button--small">
-  			  Sync
-			</button>
-		{% endif %}
-
-		<button data-hx-delete="/pds-sync/delete/{{ doc.rkey }}"
+	<td>	
+		<button data-hx-post="/atproto/dashboard/update/{{ doc.rkey }}"
+			data-hx-target="closest tr"
+			data-hx-swap="outerHTML"
+			class="button--small">
+		  Edit
+		</button>
+	</td>
+	<td>	
+		<button data-hx-delete="/atproto/dashboard/delete/{{ doc.rkey }}"
             data-hx-target="#doc-{{ doc.rkey }}"
             data-hx-swap="outerHTML"
             data-hx-confirm="Delete from PDS?"
             class="button--danger button--small">
           Delete
         </button>
-
-	  </div>
 	</td>
-  </tr>
+  </div>
+</tr>
 
-#}

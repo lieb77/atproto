@@ -93,6 +93,23 @@ final class AtprotoDashboardController extends ControllerBase {
 
         return new Response(trim((string) $this->renderer->renderInIsolation($build)));
     }
+    
+     /**
+     * Doc View.
+     */
+    public function postView(): Response {
+
+		$posts = $this->atprotoDashboard->listPostRecords();
+        $build = [
+            '#type' => 'component',
+            '#component' => 'atproto_dashboard:posts',
+            '#props' => ['posts' => $posts],
+        ];
+
+        return new Response(trim((string) $this->renderer->renderInIsolation($build)));
+    }
+    
+    
 
     /**
      * Update.

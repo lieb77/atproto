@@ -86,12 +86,44 @@ class AtprotoDashboard {
             return $record_array;
         }, $records);
 
-  //      usort($rides, fn($a, $b) => strcmp($b['date'], $a['date']));
+        usort($docs, fn($a, $b) => strcmp($b['publishedAt'], $a['publishedAt']));
         return $docs;
 
    }
    
+   /**
+	 * List Post records
+	 *
+	 */
+	public function listPostRecords() {
+      	$records = [];
+        $cursor = NULL;
 
+		do {
+			$query = [
+				'repo' 		 => $this->atprotoClient->getDid(), 
+				'collection' => 'app.bsky.feed.post', 
+				 'limit' 	 => 100
+			];
+			if ($cursor) {
+					$query['cursor'] = $cursor;
+			}
+
+			$response = $this->atprotoClient->listRecords($query);
+			$records  = array_merge($records, $response->records);
+			$cursor   = $response->cursor ?? NULL;
+		} while ($cursor);
+		
+		$posts = array_map(function ($record) {
+        	$record_array = (array) $record->value;
+            $record_array['rkey'] = basename($record->uri);
+            return $record_array;
+        }, $records);
+
+        usort($posts, fn($a, $b) => strcmp($b['createdAt'], $a['createdAt']));
+        return $posts;
+
+   }
    
     /**
      * Checks the local sync state for a given node.

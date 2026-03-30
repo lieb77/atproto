@@ -1,40 +1,44 @@
 
-<tr id="ride-{{ ride.rkey }}" class="pds-row {{ ride.sync_meta.class }} htmx-swapping">
-	<td>{{ ride['$type'] }}</td>
-	<td>{{ ride.rkey }}</td>
-	<td>{{ ride.createdAt }}</td>
-	<td>{{ ride.url }}</td>
-
-{# Status Column 
-	<td>
-	  <span class="badge {{ ride.sync_meta.class }}">
-		{{ ride.sync_meta.label }}
-	  </span>
-	</td>
-</tr>
-#}
-{# Actions Column 
-	<td>
-	  <div class="button-group">
-		{% if ride.sync_meta.status != 'synced' %}
-		 	<button data-hx-post="/pds-sync/update/{{ ride.rkey }}"
-        		data-hx-target="closest tr"
-        		data-hx-swap="outerHTML"
-        		class="button--small">
-  			  Sync
+<tr id="post-{{ post.rkey }}" class="pds-row {{ post.sync_meta.class }} htmx-swapping">
+	<td>{{ post.rkey }}</td>
+	<td>{{ post.createdAt|date("M j, Y") }}</td>
+	{% if post.tags[0] %}
+		<td>{{ post.tags[0] }}</td>
+	{% else %}
+		<td>blog-post</td>
+	{% endif %}
+	{% if post.embed.external.uri %}
+		<td>{{ post.embed.external.uri }}</td>
+	{% else %}
+		<td>{{ post.embed.images[0].alt }}</td>
+	{% endif %}
+	
+	{# Actions Column #} 
+	<div class="button-group">
+		<td>
+			<button data-hx-post="/atproto/dashboard/view/{{ post.rkey }}"
+				data-hx-target="closest tr"
+				data-hx-swap="outerHTML"
+				class="button--small">
+				View
 			</button>
-		{% endif %}
-
-		<button data-hx-delete="/pds-sync/delete/{{ ride.rkey }}"
-            data-hx-target="#ride-{{ ride.rkey }}"
-            data-hx-swap="outerHTML"
-            data-hx-confirm="Delete from PDS?"
-            class="button--danger button--small">
-          Delete
-        </button>
-
-	  </div>
-	</td>
-  </tr>
-
-#}
+		</td>
+		<td>
+			<button data-hx-post="/atproto/dashboard/update/{{ post.rkey }}"
+				data-hx-target="closest tr"
+				data-hx-swap="outerHTML"
+				class="button--small">
+				Edit
+			</button>
+		</td>
+		<td>
+			<button data-hx-delete="/atproto/dashboard/delete/{{ post.rkey }}"
+				data-hx-target="#post-{{ post.rkey }}"
+				data-hx-swap="outerHTML"
+				data-hx-confirm="Delete from PDS?"
+				class="button--danger button--small">
+				Delete
+			</button>
+		</td>
+	</div>
+</tr>
