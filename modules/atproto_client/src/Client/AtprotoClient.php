@@ -302,6 +302,44 @@ class AtprotoClient {
     }
 
 
+
+    /** ***** Wrapper functions for requests *******  **/
+
+ 	/**
+     * shorthand for com.atproto.repo.listRecords (GET)
+     */
+    public function listRecords(array $params): mixed {
+		try { 	
+       		$response = $this->request('GET', $this->endpoints->listRecords(), [
+            	'query' => $params,
+        	]);
+        	return $response;
+        }
+        catch(\Exception $e) {
+        	return FALSE;
+        }
+        
+    }
+
+	/**
+     * shorthand for com.atproto.repo.getRecord (GET)
+     */
+    public function getRecord(array $params): mixed {
+		try { 	
+       		$response = $this->request('GET', $this->endpoints->getRecord(), [
+            	'query' => $params,
+        	]);
+        	return $response;
+        }
+        catch(\Exception $e) {
+        	return FALSE;
+        }
+        
+    }
+
+
+
+
 	/**
      * shorthand for com.atproto.repo.putRecord (Usually POST)
      */
@@ -326,22 +364,7 @@ class AtprotoClient {
         ]);
     }
 
-    /**
-     * shorthand for com.atproto.repo.listRecords (GET)
-     */
-    public function listRecords(array $params): mixed {
-		try { 	
-       		$response = $this->request('GET', $this->endpoints->listRecords(), [
-            	'query' => $params,
-        	]);
-        	return $response;
-        }
-        catch(\Exception $e) {
-        	return FALSE;
-        }
-        
-    }
-
+   
     /**
      * shorthand for com.atproto.repo.deleteRecord (POST)
      */

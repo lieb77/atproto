@@ -34,7 +34,7 @@ class AtprotoDashboard {
 			$query = [
 				'repo' 		 => $this->atprotoClient->getDid(), 
 				'collection' => 'net.paullieberman.bike.ride', 
-				 'limit' 	 => 100
+				'limit' 	 => 100
 			];
 			if ($cursor) {
 					$query['cursor'] = $cursor;
@@ -69,7 +69,7 @@ class AtprotoDashboard {
 			$query = [
 				'repo' 		 => $this->atprotoClient->getDid(), 
 				'collection' => 'site.standard.document', 
-				 'limit' 	 => 100
+				'limit' 	 => 100
 			];
 			if ($cursor) {
 					$query['cursor'] = $cursor;
@@ -103,7 +103,7 @@ class AtprotoDashboard {
 			$query = [
 				'repo' 		 => $this->atprotoClient->getDid(), 
 				'collection' => 'app.bsky.feed.post', 
-				 'limit' 	 => 100
+				'limit' 	 => 100
 			];
 			if ($cursor) {
 					$query['cursor'] = $cursor;
@@ -124,6 +124,23 @@ class AtprotoDashboard {
         return $posts;
 
    }
+   
+	/**
+	 * Get a single record
+	 *
+	 */   
+	public function getRecord(string $rkey ){
+		$query = [
+			'repo' 		 => $this->atprotoClient->getDid(), 
+			'collection' => 'net.paullieberman.bike.ride',
+   			'rkey'  	 => $rkey,
+   		];
+   		
+   		$record = $this->atprotoClient->getRecord($query);
+   		return $record;
+   } 
+   
+   
    
     /**
      * Checks the local sync state for a given node.

@@ -8,8 +8,9 @@
 	<div class="button-group">
 		<td>
 			<button data-hx-post="/atproto/dashboard/view/{{ ride.rkey }}"
-				data-hx-target="closest tr"
-				data-hx-swap="outerHTML"
+				data-hx-target="#pds-overlay-content"
+				data-hx-swap="innerHTML"
+				hx-on::after-request="document.getElementById('pds-overlay-backdrop').style.display='flex';"
 				class="button--small">
 				View
 			</button>

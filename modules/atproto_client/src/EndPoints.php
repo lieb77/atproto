@@ -34,7 +34,6 @@ class EndPoints
 
     /**
      * Returns the endpoint for reading a specific record by its rkey.
-     * Useful for checking if a ride exists before importing.
      *
      * @return string
      *   The endpoint URL.
@@ -46,7 +45,6 @@ class EndPoints
 
     /**
      * Returns the endpoint for listing all records in a collection.
-     * Useful for Next.js verification or dashboard.
      *
      * @return string
      *   The endpoint URL.
