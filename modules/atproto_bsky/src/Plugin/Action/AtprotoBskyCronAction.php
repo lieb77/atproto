@@ -12,7 +12,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\ridefeed\RideFeed;
 
 /**
- * Provides a 'Ride Feed Cron' Action.
+ * Provides a Cron Action.
  *
  * @Action(
  * id = "ridefeed_cron",
@@ -20,13 +20,13 @@ use Drupal\ridefeed\RideFeed;
  * type = "system"
  * )
  */
-final class AtprotoBskyCronAction extends ActionBase implements ContainerFactoryPluginInterface {
+final class CronAction extends ActionBase implements ContainerFactoryPluginInterface {
 
     public function __construct(
         array $configuration,
         $plugin_id,
         $plugin_definition,
-        protected readonly RideFeed $rideFeed, // Using readonly for PHP 8.4
+        protected readonly RideFeed $rideFeed, 
     ) {
         parent::__construct($configuration, $plugin_id, $plugin_definition);
     }

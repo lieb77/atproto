@@ -2,31 +2,31 @@
 
 declare(strict_types=1);
 
-namespace Drupal\pds_sync\Plugin\Action;
+namespace Drupal\atproto_bsky\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\pds_sync\PdsRepository;
+use Drupal\ridefeed\RideFeed;
 
 /**
- * Provides a 'Sync Ride' Action.
+ * Provides a 'Ride Feed Cron' Action.
  *
  * @Action(
- * id = "pds_sync_sync_ride",
- * label = @Translation("Syncs a Drupal ride entity to the PDS"),
- * type = "node"
+ * id = "ridefeed_cron",
+ * label = @Translation("Checks for webmentions via cron"),
+ * type = "system"
  * )
  */
-final class SyncRideAction extends ActionBase implements ContainerFactoryPluginInterface {
+final class AtprotoBskyCronAction extends ActionBase implements ContainerFactoryPluginInterface {
 
     public function __construct(
         array $configuration,
         $plugin_id,
         $plugin_definition,
-        protected PdsRepository $pdsRepository,
+        protected readonly RideFeed $rideFeed, // Using readonly for PHP 8.4
     ) {
         parent::__construct($configuration, $plugin_id, $plugin_definition);
     }
@@ -36,30 +36,22 @@ final class SyncRideAction extends ActionBase implements ContainerFactoryPluginI
             $configuration,
             $plugin_id,
             $plugin_definition,
-            $container->get('pds_sync.repository')
+            $container->get('atproto_bsky.service')
         );
     }
-    
+
     /**
      * {@inheritdoc}
      */
-	public function execute($entity = NULL): void {
-		if (!$entity instanceof \Drupal\node\NodeInterface) {
-			return;
-		}	
-		$this->pdsRepository->syncRide($entity);
-	}
+    public function execute($object = NULL): void {
+        $this->rideFeed->getWebmentions();
+    }
 
     /**
      * {@inheritdoc}
      */
     public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
-        // In Drupal 11, we should return an AccessResult object.
-        $result = AccessResult::allowed();
-
-        // If the caller explicitly asked for a boolean (the default), 
-        // we return the result of isAllowed(). Otherwise, return the object.
-        return $return_as_object ? $result : $result->isAllowed();
+        return $return_as_object ? AccessResult::allowed() : TRUE;
     }
-    
+
 }

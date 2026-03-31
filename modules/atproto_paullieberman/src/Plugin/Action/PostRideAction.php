@@ -2,31 +2,31 @@
 
 declare(strict_types=1);
 
-namespace Drupal\pds_sync\Plugin\Action;
+namespace Drupal\atproto_paullieberman\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\pds_sync\PdsRepository;
+use Drupal\atproto_paullieberman\AtprotoPaullieberman;
 
 /**
- * Provides a 'Sync blog' Action.
+ * Provides a Post Action.
  *
  * @Action(
- * id = "pds_sync_sync_blog",
- * label = @Translation("Syncs a Drupal blog entity to the Standard Site"),
+ * id = "pds_sync_sync_ride",
+ * label = @Translation("Posts a Drupal ride using custom lexicon"),
  * type = "node"
  * )
  */
-final class SyncBlogAction extends ActionBase implements ContainerFactoryPluginInterface {
+final class SyncRideAction extends ActionBase implements ContainerFactoryPluginInterface {
 
     public function __construct(
         array $configuration,
         $plugin_id,
         $plugin_definition,
-        protected PdsRepository $pdsRepository,
+        private readonly AtprotoPaullieberman $atprotoService,
     ) {
         parent::__construct($configuration, $plugin_id, $plugin_definition);
     }
@@ -36,7 +36,7 @@ final class SyncBlogAction extends ActionBase implements ContainerFactoryPluginI
             $configuration,
             $plugin_id,
             $plugin_definition,
-            $container->get('pds_sync.repository')
+            $container->get('atproto_paullieberman.service')
         );
     }
     
@@ -47,7 +47,7 @@ final class SyncBlogAction extends ActionBase implements ContainerFactoryPluginI
 		if (!$entity instanceof \Drupal\node\NodeInterface) {
 			return;
 		}	
-		$this->pdsRepository->postToStandardSite($entity);
+		$this->atprotoService->postRide($entity);
 	}
 
     /**

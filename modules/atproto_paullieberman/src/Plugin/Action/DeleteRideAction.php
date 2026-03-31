@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\pds_sync\Plugin\Action;
+namespace Drupal\atproto_paullieberman\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Access\AccessResult;
@@ -10,8 +10,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\State\StateInterface;
-
+use Drupal\atproto_paullieberman\AtprotoPaullieberman;
 
 /**
  * Provides a 'Delete Ride' Action.
@@ -28,7 +27,7 @@ final class DeleteRideAction extends ActionBase implements ContainerFactoryPlugi
         array $configuration,
         $plugin_id,
         $plugin_definition,
-        private readonly StateInterface $state,
+        private readonly AtprotoPaullieberman $atprotoService,
     ) {
         parent::__construct($configuration, $plugin_id, $plugin_definition);
     }
@@ -38,7 +37,7 @@ final class DeleteRideAction extends ActionBase implements ContainerFactoryPlugi
             $configuration,
             $plugin_id,
             $plugin_definition,
-            $container->get('state')
+            $container->get('atproto_paullieberman.service')
         );
     }
     
@@ -51,8 +50,7 @@ final class DeleteRideAction extends ActionBase implements ContainerFactoryPlugi
 		}
 		
 		if ($entity->bundle() === 'ride') {
-			// Cleanup the state entry when the node is gone.
-			$this->state->delete('pds_sync.sync.' . $entity->uuid());
+			$this->atprotoService->deleteRide($entity);
 		}
 	}
 	

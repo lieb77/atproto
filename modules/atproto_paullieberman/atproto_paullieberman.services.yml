@@ -6,6 +6,6 @@ services:
       - '@atproto_client.client'
       - '@state'
       - '@entity_type.manager'
-      - '@logger.channel.atproto'
+      - '@logger.factory'
       - '@datetime.time'
  

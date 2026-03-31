@@ -154,6 +154,26 @@ class AtprotoDashboard {
    		return $record;
    } 
    
+    /**
+     * Deletes a ride from the PDS.
+     */
+    public function deleteRide(string $rkey): bool {
+        try {
+            $this->atprotoClient->deleteRecord( 
+            	[
+                    'repo' 		 =>  $this->$atprotoClient->getDid(),
+                    'collection' => 'net.paullieberman.bike.ride',
+                    'rkey' 		 => $rkey,
+                ],
+            );
+            return TRUE;
+        }
+        catch (\Exception $e) {
+            $this->logger->error('Failed to delete ride @rkey: @message', ['@rkey' => $rkey, '@message' => $e->getMessage()]);
+            return FALSE;
+        }
+    }
+
    
    
     /**
