@@ -1,12 +1,20 @@
-{#
-/**
- * Posts - app.bsky.feed.post
- */
-
-{{ dump(posts[3]) }}
-#}
+{# Posts - app.bsky.feed.post #}
 
 {{ attach_library('core/htmx') }}
+
+<div id="pds-overlay-backdrop" class="pds-overlay-backdrop" style="display:none;">
+  <div class="pds-overlay">
+    <button class="pds-overlay__close"
+      hx-on:click="
+        document.getElementById('pds-overlay-backdrop').style.display='none';
+        document.getElementById('pds-overlay-content').innerHTML='';
+      ">
+      &times;
+    </button>
+    <div id="pds-overlay-content"></div>
+  </div>
+</div>
+
 <div class="pds-rides">
   {% if posts is not empty %}
     <table>

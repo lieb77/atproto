@@ -129,10 +129,24 @@ class AtprotoDashboard {
 	 * Get a single record
 	 *
 	 */   
-	public function getRecord(string $rkey ){
+	public function getRecord(string $type, string $rkey ){
+		switch ($type){
+			case 'ride':
+				$collection = 'net.paullieberman.bike.ride';
+				break;
+			case 'post':
+				$collection = 'app.bsky.feed.post';
+				break;
+			case 'doc':
+				$collection = 'site.standard.document';
+				break;
+			default:
+				$collection = 'app.bsky.feed.post';
+		}
+		
 		$query = [
 			'repo' 		 => $this->atprotoClient->getDid(), 
-			'collection' => 'net.paullieberman.bike.ride',
+			'collection' => $collection,
    			'rkey'  	 => $rkey,
    		];
    		

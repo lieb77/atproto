@@ -114,9 +114,9 @@ final class AtprotoDashboardController extends ControllerBase {
 	 * View record
 	 *
 	 */
-	public function viewRecord(string $rkey): Response {
+	public function viewRecord(string $type, string $rkey): Response {
 	
-		$record = $this->atprotoDashboard->getRecord($rkey);
+		$record = $this->atprotoDashboard->getRecord($type, $rkey);
 
 	    $build = [
             '#type' => 'component',

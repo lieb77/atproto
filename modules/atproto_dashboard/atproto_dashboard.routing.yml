@@ -28,7 +28,7 @@ atproto_dashboard.post_view:
     _permission: 'administer atproto'
       
 atproto_dashboard.view:
-  path: '/atproto/dashboard/view/{rkey}'
+  path: '/atproto/dashboard/view/{type}/{rkey}'
   defaults:
     _controller: '\Drupal\atproto_dashboard\Controller\AtprotoDashboardController::viewRecord'
   requirements:
