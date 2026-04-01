@@ -1,8 +1,0 @@
-name: 'ATproto Core'
-type: module
-description: 'Core services for ATproto modules'
-package: ATproto
-core_version_requirement: ^11.3
-dependencies:
-  - atproto:atproto
-  - atproto_client:atproto_client

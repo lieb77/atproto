@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\atproto_client\Client;
 
-use Drupal\atproto_core\AtprotoLoggerTrait;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
@@ -12,6 +11,7 @@ use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\key\KeyRepositoryInterface;
 use GuzzleHttp\ClientInterface;
 use Drupal\atproto_client\Endpoints;
+use Drupal\atproto\AtprotoLoggerTrait;
 
 
 /**

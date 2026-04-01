@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\node\NodeInterface;
-use Drupal\atproto_core\AtprotoLoggerTrait;
+use Drupal\atproto\AtprotoLoggerTrait;
 use Drupal\atproto_client\Client\AtprotoClient;
 
 /**

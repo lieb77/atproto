@@ -5,7 +5,7 @@ namespace Drupal\atproto_dashboard;
 
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\atproto_core\AtprotoLoggerTrait;
+use Drupal\atproto\AtprotoLoggerTrait;
 use Drupal\atproto_client\Client\AtprotoClient;
 
 /**

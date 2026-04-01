@@ -12,7 +12,7 @@ use Drupal\Core\State\StateInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\atproto_core\AtprotoLoggerTrait;
+use Drupal\atproto\AtprotoLoggerTrait;
 use Drupal\atproto_client\Client\AtprotoClient;
 
 /**

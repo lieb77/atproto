@@ -10,7 +10,7 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
-uuse Drupal\atproto_core\AtprotoLoggerTrait;
+uuse Drupal\atproto\AtprotoLoggerTrait;
 use Drupal\atproto_client\Client\AtprotoClient;
 
 
