@@ -69,11 +69,11 @@ final class AtprotoStandardSite {
 				'rkey'		 => $node->uuid(),
 				'record' 	 => $record,
 			]);
-			$this->logger->notice("Created standard site record for blog post @title", ["@title" => $node->get('title')->value]);
+			$this->logger()->notice("Created standard site record for blog post @title", ["@title" => $node->get('title')->value]);
 			return $response;
 		}
 		catch (\Throwable $e) {
-      		$this->logger->error("Post standard site record failed: " . $e->getMessage());
+      		$this->logger()->error("Post standard site record failed: " . $e->getMessage());
       		return FALSE;
 	 	}
 	 }
@@ -145,11 +145,11 @@ final class AtprotoStandardSite {
 				'rkey'		 => $node->uuid(),
 				'record' 	 => $record,
 			]);
-			$this->logger->notice("Created standard site record for ride  @title", ["@title" => $node->get('title')->value]);
+			$this->logger()->notice("Created standard site record for ride  @title", ["@title" => $node->get('title')->value]);
 			return $response;
 		}
 		catch (\Throwable $e) {
-      		$this->logger->error("Post standard site record failed: " . $e->getMessage());
+      		$this->logger()->error("Post standard site record failed: " . $e->getMessage());
       		return FALSE;
 	 	}
 	 }

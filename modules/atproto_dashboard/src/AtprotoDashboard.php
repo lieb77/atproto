@@ -46,7 +46,7 @@ class AtprotoDashboard {
 				$response = $this->atprotoClient->listRecords($query);
 			}
 			catch (\Throwable $e) {
-				$this->logger->error("Call to list records got error: @err",["@err" => $e->getMessage()]);
+				$this->logger()->error("Call to list records got error: @err",["@err" => $e->getMessage()]);
 				return NULL;
 			}
 
@@ -178,7 +178,7 @@ class AtprotoDashboard {
             return TRUE;
         }
         catch (\Exception $e) {
-            $this->logger->error('Failed to delete ride @rkey: @message', ['@rkey' => $rkey, '@message' => $e->getMessage()]);
+            $this->logger()->error('Failed to delete ride @rkey: @message', ['@rkey' => $rkey, '@message' => $e->getMessage()]);
             return FALSE;
         }
     }

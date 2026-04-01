@@ -45,7 +45,7 @@ final class PostBlogAction extends ActionBase implements ContainerFactoryPluginI
      * {@inheritdoc}
      */
 	public function execute($entity = NULL): void {
-		if (!$entity instanceof \Drupal\node\NodeInterface || $entity->bundle() !== 'ride') {
+		if (!$entity instanceof \Drupal\node\NodeInterface || $entity->bundle() !== 'blog') {
 			return;
 		}
 		$this->atptotoBsky->postBlogToTimeline($entity);

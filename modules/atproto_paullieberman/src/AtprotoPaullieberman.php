@@ -85,7 +85,7 @@ class AtprotoPaullieberman {
             return TRUE;
         }
         catch (\Exception $e) {
-            $this->logger->error('Failed to delete ride @rkey: @message', ['@rkey' => $rkey, '@message' => $e->getMessage()]);
+            $this->logger()->error('Failed to delete ride @rkey: @message', ['@rkey' => $rkey, '@message' => $e->getMessage()]);
             return FALSE;
         }
     }

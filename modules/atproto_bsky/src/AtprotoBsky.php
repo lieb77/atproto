@@ -39,7 +39,7 @@ class AtprotoBsky {
      *
      */
     public function postRideToTimeline(NodeInterface $node): mixed {
-        $this->logger->info("Starting postRideToTimeline");
+        $this->logger()->info("Starting postRideToTimeline");
         $rideDateRaw = $node->get('field_ridedate')->value;
         $textParts = [
             "🚲Lieb's Ride Log🚲",
@@ -79,7 +79,7 @@ class AtprotoBsky {
         
         // If the post was successful we create a syndication entity
         if (isset($response->uri)) {
-        	$this->logger->info("Ride posted to @uri",["@uri" => $response->uri]);
+        	$this->logger()->info("Ride posted to @uri",["@uri" => $response->uri]);
             $this->createSyndicationEntity((int) $node->id(), $response->uri);
         }
         return $response;
@@ -119,7 +119,7 @@ class AtprotoBsky {
 
 		foreach ($syndications as $syndication) {
 			if (!empty($syndication['at_uri'])) {
-				$this->logger->info("Checking syndication of node @nid for webmentions.", [
+				$this->logger()->info("Checking syndication of node @nid for webmentions.", [
 					'@nid' => $syndication['nid']
 				]);
 				$this->checkForWebmentions($syndication);
@@ -287,7 +287,7 @@ class AtprotoBsky {
             'url' 			 => $url,
             'at_uri' 		 => $atUri,
         ])->save();
-        $this->logger->info("Syndication saved for node @nid",["@nid" => $nid]);
+        $this->logger()->info("Syndication saved for node @nid",["@nid" => $nid]);
     }
 
 // end-of-class
