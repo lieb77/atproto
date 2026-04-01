@@ -26,7 +26,7 @@ final class CronAction extends ActionBase implements ContainerFactoryPluginInter
         array $configuration,
         $plugin_id,
         $plugin_definition,
-        protected readonly AtprotoBsky $atprotoBsky,
+        protected ContainerInterface $container,
     ) {
         parent::__construct($configuration, $plugin_id, $plugin_definition);
     }
@@ -36,7 +36,7 @@ final class CronAction extends ActionBase implements ContainerFactoryPluginInter
             $configuration,
             $plugin_id,
             $plugin_definition,
-            $container->get('atproto_bsky.service')
+            $container
         );
     }
 
@@ -44,7 +44,7 @@ final class CronAction extends ActionBase implements ContainerFactoryPluginInter
      * {@inheritdoc}
      */
     public function execute($object = NULL): void {
-        $this->atprotoBsky->getWebmentions();
+        $this->container->get('atproto_bsky.service')->getWebmentions();
     }
 
     /**

@@ -114,9 +114,8 @@ class AtprotoBsky {
 	 *
 	 */
 	public function getWebmentions(){
-
-		 $syndications = $this->getSyndications();
-
+		$this->logger()->info("Starting getWebmentions");
+		$syndications = $this->getSyndications();
 		foreach ($syndications as $syndication) {
 			if (!empty($syndication['at_uri'])) {
 				$this->logger()->info("Checking syndication of node @nid for webmentions.", [
@@ -162,8 +161,16 @@ class AtprotoBsky {
 	 */
  	public function getSyndications(): array {
         $syndications = [];
-        $storage = $this->entityTypeManager->getStorage('indieweb_syndication');
-        $ids = $storage->getQuery()->accessCheck(FALSE)->execute();
+       	$storage = $this->entityTypeManager->getStorage('indieweb_syndication');
+
+        try{
+        	$ids = $storage->getQuery()->accessCheck(FALSE)->execute();
+		}
+		catch(\Throwable $e){
+			$this->logger()->error("Failed to get syndication entities: @err",["@err" => $e->getMessage()]);
+			return NULL;
+		}
+
         foreach ($storage->loadMultiple($ids) as $synd) {
             $syndications[] = [
                 'url' 	 => $synd->get('url')->value,

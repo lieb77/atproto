@@ -34,7 +34,7 @@ final class PostRideAction extends ActionBase implements ContainerFactoryPluginI
         array $configuration,
         $plugin_id,
         $plugin_definition,
-        private readonly AtprotoStandardSite $atprotoStandardSite,
+        protected ContainerInterface $container,
     ) {
         parent::__construct($configuration, $plugin_id, $plugin_definition);
     }
@@ -47,7 +47,7 @@ final class PostRideAction extends ActionBase implements ContainerFactoryPluginI
             $configuration,
             $plugin_id,
             $plugin_definition,
-            $container->get('atproto_standard_site.service'),
+            $container
         );
     }
 
@@ -66,7 +66,7 @@ final class PostRideAction extends ActionBase implements ContainerFactoryPluginI
         if (!$entity instanceof \Drupal\node\NodeInterface) {
             return;
         } 
-        $this->atprotoStandardSite->rideToStandardSite($entity);
+        $this->container->get('atproto_standard_site.service')->rideToStandardSite($entity);
     }
 
 }

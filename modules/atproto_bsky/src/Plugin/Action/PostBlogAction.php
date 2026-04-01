@@ -27,7 +27,7 @@ final class PostBlogAction extends ActionBase implements ContainerFactoryPluginI
         array $configuration,
         $plugin_id,
         $plugin_definition,
-        protected AtprotoBsky $atptotoBsky,
+        protected ContainerInterface $container,
     ) {
         parent::__construct($configuration, $plugin_id, $plugin_definition);
     }
@@ -37,7 +37,7 @@ final class PostBlogAction extends ActionBase implements ContainerFactoryPluginI
             $configuration,
             $plugin_id,
             $plugin_definition,
-            $container->get('atproto_bsky.service')
+            $container
         );
     }
     
@@ -48,7 +48,7 @@ final class PostBlogAction extends ActionBase implements ContainerFactoryPluginI
 		if (!$entity instanceof \Drupal\node\NodeInterface || $entity->bundle() !== 'blog') {
 			return;
 		}
-		$this->atptotoBsky->postBlogToTimeline($entity);
+		$this->container->get('atproto_bsky.service')->postBlogToTimeline($entity);
 	}
 
     /**

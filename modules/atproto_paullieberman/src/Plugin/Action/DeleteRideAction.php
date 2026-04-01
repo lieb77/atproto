@@ -27,7 +27,7 @@ final class DeleteRideAction extends ActionBase implements ContainerFactoryPlugi
         array $configuration,
         $plugin_id,
         $plugin_definition,
-        private readonly AtprotoPaullieberman $atprotoService,
+        protected ContainerInterface $container,
     ) {
         parent::__construct($configuration, $plugin_id, $plugin_definition);
     }
@@ -37,7 +37,7 @@ final class DeleteRideAction extends ActionBase implements ContainerFactoryPlugi
             $configuration,
             $plugin_id,
             $plugin_definition,
-            $container->get('atproto_paullieberman.service')
+            $container
         );
     }
     
@@ -50,7 +50,7 @@ final class DeleteRideAction extends ActionBase implements ContainerFactoryPlugi
 		}
 		
 		if ($entity->bundle() === 'ride') {
-			$this->atprotoService->deleteRide($entity);
+			$this->container->get('atproto_paullieberman.service')->deleteRide($entity);
 		}
 	}
 	
