@@ -36,7 +36,6 @@ class AtprotoClientHooks {
                     <li>Obtain an <a href="https://blueskyfeeds.com/en/faq-app-password">App Password</a> for your BlueSky account. Do not use your login password.</li>
                     <li>Create a new Key at <a href="/admin/config/system/keys">/admin/config/system/keys</a>. This will be an Authentication key and will hold your App Password.</li>
                     <li>Go to the Atproto Client settings at <a href="/admin/config/services/atprotoclient-settings">/admin/config/services/atprotoclient-settings</a>. Enter your Atproto handle and select the Key you saved</li>
-                    <li>Go to your user profile and you will now see a Bluesky tab</li>
                 </ol>
             EOF;
 

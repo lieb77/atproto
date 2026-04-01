@@ -6,5 +6,4 @@ core_version_requirement: ^11.3
 dependencies:
   - atproto:atproto
   - atproto_client:atproto_client
-  - atproto_core:atproto_core
   - indieweb_webmention:indieweb_webmention

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\atproto_paullieberman\Hook;
+namespace Drupal\atproto_dashboard\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -10,8 +10,9 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * Provides hook implementations for the PDS Sync module.
  */
-class AtprotoPaulliebermanHooks {
+class AtprotoDashboardHooks {
 
+    
     /**
      * Implements hook_help().
      *
@@ -26,10 +27,14 @@ class AtprotoPaulliebermanHooks {
     #[Hook('help')]
     public function help(string $route_name, RouteMatchInterface $route_match): ?array
     {
-        if ($route_name === 'help.page.atproto_paullieberman') {
+        if ($route_name === 'help.page.atproto_dashboard') {
             $output = <<<EOF
-                <h2>ATproto Paullieberman Help</h2>
-                <p>This module provides routines to write net.paullieberman.bike.ride records.</p>
+                <h2>ATproto Dashboard Help</h2>
+                <p>This module provides a dashboard for working wih  AT Protocol records.</p>
+                <ul>
+                  <li>Lists records for each lexicon</li>
+                  <li>Provides View, Edit, and Delete actions for each record</li>
+                </ul>                
             EOF;
 
             return ['#markup' => $output];
@@ -37,6 +42,5 @@ class AtprotoPaulliebermanHooks {
 
         return NULL;
     }
-
 }
 
