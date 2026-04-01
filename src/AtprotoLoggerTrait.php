@@ -1,5 +1,5 @@
 <?php
-namespace Drupal\atprot;
+namespace Drupal\atproto;
 
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
