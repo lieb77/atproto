@@ -1,0 +1,85 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.ride
+  module:
+    - atproto_bsky
+    - atproto_paullieberman
+    - atproto_standard_site
+    - eca_content
+    - modeler_api
+third_party_settings:
+  modeler_api:
+    modeler_id: workflow_modeler
+    data: 'hash:106c1680f2f7db64162cd889c82b89e7'
+    label: 'Ride posts'
+    documentation: 'Do stuff on ride post actions'
+    version: 1.0.0
+id: ride_posts
+weight: 0
+template: false
+events:
+  insert_content_entity_kfwsng0d:
+    plugin: 'content_entity:insert'
+    label: 'Insert content entity'
+    configuration:
+      type: 'node ride'
+    successors:
+      -
+        id: post_ride_to_bluesky_8h1jy0qm
+        condition: ''
+      -
+        id: post_ride_to_standard_site_7ek7dlxq
+        condition: ''
+      -
+        id: posts_a_drupal_ride_using_custom_lexicon_4mufbyr5
+        condition: ''
+  update_content_entity_nc4gnzxr:
+    plugin: 'content_entity:update'
+    label: 'Update content entity'
+    configuration:
+      type: 'node ride'
+    successors:
+      -
+        id: post_ride_to_standard_site_7ek7dlxq
+        condition: ''
+      -
+        id: posts_a_drupal_ride_using_custom_lexicon_4mufbyr5
+        condition: ''
+  delete_content_entity_m1iqlvnn:
+    plugin: 'content_entity:delete'
+    label: 'Delete content entity'
+    configuration:
+      type: 'node ride'
+    successors:
+      -
+        id: delete_atproto_record_when_a_ride_node_is_deleted_5zochfys
+        condition: ''
+conditions: {  }
+gateways: {  }
+actions:
+  post_ride_to_bluesky_8h1jy0qm:
+    label: 'Post ride to Bluesky'
+    plugin: atproto_bsky_post_ride
+    configuration:
+      object: node
+    successors: {  }
+  post_ride_to_standard_site_7ek7dlxq:
+    label: 'Post Ride to Standard Site'
+    plugin: atproto_standard_site_post_ride_action
+    configuration:
+      object: node
+    successors: {  }
+  posts_a_drupal_ride_using_custom_lexicon_4mufbyr5:
+    label: 'Posts a Drupal ride using custom lexicon'
+    plugin: pds_sync_sync_ride
+    configuration:
+      object: node
+    successors: {  }
+  delete_atproto_record_when_a_ride_node_is_deleted_5zochfys:
+    label: 'Delete atproto record when a ride node is deleted'
+    plugin: atproto_paullieberman_delete_ride
+    configuration:
+      object: node
+    successors: {  }

@@ -1,0 +1,12 @@
+name: 'Ride posts'
+description: 'Do stuff on ride post actions'
+type: Workflow
+install:
+  - atproto_bsky
+  - atproto_paullieberman
+  - atproto_standard_site
+  - eca_content
+  - modeler_api
+  - menu_ui
+config:
+  strict: false

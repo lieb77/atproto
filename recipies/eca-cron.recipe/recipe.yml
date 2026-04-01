@@ -1,0 +1,9 @@
+name: Cron
+description: 'Do stuff on cron events'
+type: Workflow
+install:
+  - atproto_bsky
+  - eca_base
+  - modeler_api
+config:
+  strict: false

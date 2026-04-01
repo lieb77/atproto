@@ -1,0 +1,12 @@
+{
+    "name": "drupal/cron",
+    "type": "drupal-recipe",
+    "description": "Cron",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "drupal/core": ">=11.2",
+        "drupal/atproto": "*",
+        "drupal/eca": "*",
+        "drupal/modeler_api": "*"
+    }
+}

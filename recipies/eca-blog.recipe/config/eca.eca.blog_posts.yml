@@ -1,0 +1,57 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.blog
+  module:
+    - atproto_bsky
+    - atproto_standard_site
+    - eca_content
+    - modeler_api
+third_party_settings:
+  modeler_api:
+    modeler_id: workflow_modeler
+    data: 'hash:80d733b249bc75d36f232b8b0fb877bd'
+    label: 'Blog Posts'
+    documentation: 'Do stuff on blog post events'
+    version: 1.0.0
+id: blog_posts
+weight: null
+template: false
+events:
+  insert_content_entity_sffysavd:
+    plugin: 'content_entity:insert'
+    label: 'Insert content entity'
+    configuration:
+      type: 'node blog'
+    successors:
+      -
+        id: post_blog_to_bluesky_10xfvs94
+        condition: ''
+      -
+        id: post_blog_to_standard_site_action_bb5m87bh
+        condition: ''
+  update_content_entity_ao1h48ss:
+    plugin: 'content_entity:update'
+    label: 'Update content entity'
+    configuration:
+      type: 'node blog'
+    successors:
+      -
+        id: post_blog_to_standard_site_action_bb5m87bh
+        condition: ''
+conditions: {  }
+gateways: {  }
+actions:
+  post_blog_to_bluesky_10xfvs94:
+    label: 'Post blog to Bluesky'
+    plugin: atproto_bsky_post_blog
+    configuration:
+      object: node
+    successors: {  }
+  post_blog_to_standard_site_action_bb5m87bh:
+    label: 'Post Blog to Standard Site Action'
+    plugin: atproto_standard_site_post_blog_action
+    configuration:
+      object: node
+    successors: {  }

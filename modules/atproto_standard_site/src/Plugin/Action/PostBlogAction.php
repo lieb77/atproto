@@ -13,7 +13,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\atproto_standard_site\AtptotoStandardSite;
+use Drupal\atproto_standard_site\AtprotoStandardSite;
 
 /**
  * Provides a Blog Insert Action action.
@@ -25,7 +25,7 @@ use Drupal\atproto_standard_site\AtptotoStandardSite;
     category: new TranslatableMarkup('Custom'),
     type: 'node',
 )]
-final class BlogInsertAction extends ActionBase implements ContainerFactoryPluginInterface {
+final class PostBlogAction extends ActionBase implements ContainerFactoryPluginInterface {
 
     /**
      * {@inheritdoc}
@@ -47,7 +47,7 @@ final class BlogInsertAction extends ActionBase implements ContainerFactoryPlugi
             $configuration,
             $plugin_id,
             $plugin_definition,
-             $container->get('atporoto_standard_site.service'),
+            $container->get('atproto_standard_site.service'),
         );
     }
 

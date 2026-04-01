@@ -1,0 +1,11 @@
+name: 'Blog Posts'
+description: 'Do stuff on blog post events'
+type: Workflow
+install:
+  - atproto_bsky
+  - atproto_standard_site
+  - eca_content
+  - modeler_api
+  - menu_ui
+config:
+  strict: false

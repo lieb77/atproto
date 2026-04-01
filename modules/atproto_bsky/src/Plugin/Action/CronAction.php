@@ -9,13 +9,13 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\ridefeed\RideFeed;
+use Drupal\atproto_bsky\AtprotoBsky;
 
 /**
- * Provides a 'Ride Feed Cron' Action.
+ * Provides a  Cron Action.
  *
  * @Action(
- * id = "ridefeed_cron",
+ * id = "atproto_bsky_cron",
  * label = @Translation("Checks for webmentions via cron"),
  * type = "system"
  * )
@@ -26,7 +26,7 @@ final class CronAction extends ActionBase implements ContainerFactoryPluginInter
         array $configuration,
         $plugin_id,
         $plugin_definition,
-        protected readonly RideFeed $rideFeed, // Using readonly for PHP 8.4
+        protected readonly AtprotoBsky $atprotoBsky,
     ) {
         parent::__construct($configuration, $plugin_id, $plugin_definition);
     }
@@ -44,7 +44,7 @@ final class CronAction extends ActionBase implements ContainerFactoryPluginInter
      * {@inheritdoc}
      */
     public function execute($object = NULL): void {
-        $this->rideFeed->getWebmentions();
+        $this->atprotoBsky->getWebmentions();
     }
 
     /**

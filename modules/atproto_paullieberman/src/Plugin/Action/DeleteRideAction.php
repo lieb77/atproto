@@ -13,11 +13,11 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\atproto_paullieberman\AtprotoPaullieberman;
 
 /**
- * Provides a 'Delete Ride' Action.
+ * Provides a Delete Ride Action.
  *
  * @Action(
- * id = "pds_sync_delete_ride",
- * label = @Translation("Remove a ride from 'state' if the node is deleted"),
+ * id = "atproto_paullieberman_delete_ride",
+ * label = @Translation("Delete atproto record when a ride node is deleted"),
  * type = "node"
  * )
  */

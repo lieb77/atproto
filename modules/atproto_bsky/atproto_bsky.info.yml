@@ -1,4 +1,4 @@
-name: 'ATProto Bsky'
+name: 'ATProto Bluesky'
 type: module
 description: 'Create app.bsky.feed.post records'
 package: ATproto

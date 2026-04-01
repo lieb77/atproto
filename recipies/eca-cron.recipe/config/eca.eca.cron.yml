@@ -1,0 +1,35 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - atproto_bsky
+    - eca_base
+    - modeler_api
+third_party_settings:
+  modeler_api:
+    modeler_id: workflow_modeler
+    data: 'hash:a226d1e01e3ad024b1131f0a0e67988e'
+    label: Cron
+    documentation: 'Do stuff on cron events'
+    version: 1.0.0
+id: cron
+weight: null
+template: false
+events:
+  eca_cron_event_9yp7j2tz:
+    plugin: 'eca_base:eca_cron'
+    label: 'ECA cron event'
+    configuration:
+      frequency: '* * * * *'
+    successors:
+      -
+        id: checks_for_webmentions_via_cron_kj6pj6ol
+        condition: ''
+conditions: {  }
+gateways: {  }
+actions:
+  checks_for_webmentions_via_cron_kj6pj6ol:
+    label: 'Checks for webmentions via cron'
+    plugin: atproto_bsky_cron
+    configuration: {  }
+    successors: {  }

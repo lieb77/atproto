@@ -14,12 +14,15 @@ use Drupal\atproto_client\Client\AtprotoClient;
 class AtprotoDashboard {
 
     use AtprotoLoggerTrait;
+
+    protected $did;
     
     public function __construct(
         protected AtprotoClient $atprotoClient,
         protected LoggerChannelFactoryInterface $loggerFactory
     ) {
     	$this->setLoggerFactory($loggerFactory);
+    	$this->did = $atprotoClient->getDid();
     }
 
 	/**
@@ -32,15 +35,21 @@ class AtprotoDashboard {
 
 		do {
 			$query = [
-				'repo' 		 => $this->atprotoClient->getDid(), 
-				'collection' => 'net.paullieberman.bike.ride', 
+				'repo' 		 => $this->did, 
+				'collection' => 'net.paullieberman.bike.ride',
 				'limit' 	 => 100
 			];
 			if ($cursor) {
 					$query['cursor'] = $cursor;
 			}
+			try {
+				$response = $this->atprotoClient->listRecords($query);
+			}
+			catch (\Throwable $e) {
+				$this->logger->error("Call to list records got error: @err",["@err" => $e->getMessage()]);
+				return NULL;
+			}
 
-			$response = $this->atprotoClient->listRecords($query);
 			$records  = array_merge($records, $response->records);
 			$cursor   = $response->cursor ?? NULL;
 		} while ($cursor);
@@ -67,7 +76,7 @@ class AtprotoDashboard {
 
 		do {
 			$query = [
-				'repo' 		 => $this->atprotoClient->getDid(), 
+				'repo' 		 => $this->did, 
 				'collection' => 'site.standard.document', 
 				'limit' 	 => 100
 			];
@@ -101,7 +110,7 @@ class AtprotoDashboard {
 
 		do {
 			$query = [
-				'repo' 		 => $this->atprotoClient->getDid(), 
+				'repo' 		 => $this->did, 
 				'collection' => 'app.bsky.feed.post', 
 				'limit' 	 => 100
 			];
@@ -145,7 +154,7 @@ class AtprotoDashboard {
 		}
 		
 		$query = [
-			'repo' 		 => $this->atprotoClient->getDid(), 
+			'repo' 		 => $this->did, 
 			'collection' => $collection,
    			'rkey'  	 => $rkey,
    		];
@@ -161,7 +170,7 @@ class AtprotoDashboard {
         try {
             $this->atprotoClient->deleteRecord( 
             	[
-                    'repo' 		 =>  $this->$atprotoClient->getDid(),
+                    'repo' 		 =>  $this->did,
                     'collection' => 'net.paullieberman.bike.ride',
                     'rkey' 		 => $rkey,
                 ],

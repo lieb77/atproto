@@ -20,7 +20,7 @@ use Drupal\atproto_paullieberman\AtprotoPaullieberman;
  * type = "node"
  * )
  */
-final class SyncRideAction extends ActionBase implements ContainerFactoryPluginInterface {
+final class PostRideAction extends ActionBase implements ContainerFactoryPluginInterface {
 
     public function __construct(
         array $configuration,

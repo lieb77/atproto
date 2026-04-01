@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\atproto_paullieberman
+namespace Drupal\atproto_paullieberman;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -27,7 +27,7 @@ class AtprotoPaullieberman {
         protected AtprotoClient $atprotoClient,
         protected StateInterface $state,
         protected EntityTypeManagerInterface $entityTypeManager,
-        protected LoggerChannelFactoryInterface $loggerFactory
+        protected LoggerChannelFactoryInterface $loggerFactory,
         protected TimeInterface $time,
     ) {
     	$this->setLoggerFactory($loggerFactory);
@@ -71,7 +71,7 @@ class AtprotoPaullieberman {
     /**
      * Deletes a ride from the PDS.
      */
-    public function deleteRide((NodeInterface $node): bool {
+    public function deleteRide(NodeInterface $node): bool {
     	$rkey = $node->uuid();
     	
         try {

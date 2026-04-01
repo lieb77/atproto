@@ -1,0 +1,5 @@
+langcode: en
+status: true
+dependencies: {  }
+id: eca_workflow_modeler_cron
+data: '{"id":"cron","version":"1.0.0","metadata":{"label":"Cron","documentation":"Do stuff on cron events","executable":true,"tags":[],"changelog":"","id":"cron","version":"1.0.0","template":false,"storage":""},"nodes":[{"id":"eca_cron_event_9yp7j2tz","componentType":1,"plugin":"eca_base:eca_cron","label":"ECA cron event","position":{"x":100,"y":100},"configuration":{},"annotation":""},{"id":"checks_for_webmentions_via_cron_kj6pj6ol","componentType":4,"plugin":"atproto_bsky_cron","label":"Checks for webmentions via cron","position":{"x":102,"y":308},"configuration":{},"annotation":""}],"edges":[{"id":"eca_cron_event_9yp7j2tz_to_checks_for_webmentions_via_cron_kj6pj6ol_1d93y1m4","source":"eca_cron_event_9yp7j2tz","target":"checks_for_webmentions_via_cron_kj6pj6ol","condition":"","conditionId":"","conditionLabel":"","conditionConfiguration":{},"annotation":"","controlOffset":{"x":0,"y":0}}]}'

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\atproto_standardsite\Hook;
+namespace Drupal\atproto_standard_site\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -10,7 +10,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * Provides hook implementations for the PDS Sync module.
  */
-class AtprotoHooks {
+class AtprotoStandardSiteHooks {
 
     
     /**
