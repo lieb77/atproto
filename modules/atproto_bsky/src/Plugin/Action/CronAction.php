@@ -20,7 +20,7 @@ use Drupal\ridefeed\RideFeed;
  * type = "system"
  * )
  */
-final class AtprotoBskyCronAction extends ActionBase implements ContainerFactoryPluginInterface {
+final class CronAction extends ActionBase implements ContainerFactoryPluginInterface {
 
     public function __construct(
         array $configuration,

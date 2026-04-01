@@ -25,7 +25,7 @@ class AtprotoBsky {
     public function __construct(
         protected AtprotoClient $atprotoClient,
         protected EntityTypeManagerInterface $entityTypeManager,
-         protected LoggerChannelFactoryInterface $loggerFactory
+        protected LoggerChannelFactoryInterface $loggerFactory
     ) {
     	$this->setLoggerFactory($loggerFactory);
     }

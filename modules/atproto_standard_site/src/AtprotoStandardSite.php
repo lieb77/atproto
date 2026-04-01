@@ -5,29 +5,33 @@ declare(strict_types=1);
 namespace Drupal\atproto_standard_site;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Logger\LoggerChannelInterface;
-use Drupal\atproto_client\Client\AtprotoClient;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+uuse Drupal\atproto_core\AtprotoLoggerTrait;
+use Drupal\atproto_client\Client\AtprotoClient;
+
 
 /**
- * Service to post blog entries and rides a site.standard.document records
+ * Service to post blog entries and rides as site.standard.document records
  *
  */
 final class AtprotoStandardSite {
-
+   use AtprotoLoggerTrait;
 
   /**
    * Constructs a StandardSite object.
    */
   public function __construct(
     private readonly EntityTypeManagerInterface $entityTypeManager,
-    private readonly LoggerChannelInterface $logger,
+    protected LoggerChannelFactoryInterface $loggerFactory,
     private readonly AtprotoClient $atprotoClient,
-  ) {}
-
+    ) {
+    	$this->setLoggerFactory($loggerFactory);
+    }
+ 
 
  	/**
 	 * Publish a blog post as a site.standard.document record
