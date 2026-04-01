@@ -1,7 +1,7 @@
-name: 'Atptoto Paullieberman'
+name: 'ATptoto Paullieberman'
 type: module
 description: 'ATproto management for the net.paullieberman. namespace'
-package: Atproto
+package: ATproto
 core_version_requirement: ^11.3
 dependencies:
   - atproto:atproto

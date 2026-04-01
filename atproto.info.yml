@@ -1,7 +1,7 @@
-name: 'Atproto'
+name: 'ATproto'
 type: module
 description: 'Suite of modules for integrating Authenticated Protocol with Drupal'
-package: Atproto
+package: ATproto
 core_version_requirement: ^11.3
 configure: atproto.settings
 dependencies:

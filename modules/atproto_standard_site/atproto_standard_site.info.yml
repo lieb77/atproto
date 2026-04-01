@@ -1,7 +1,7 @@
-name: 'Atproto Standard Site'
+name: 'ATproto Standard Site'
 type: module
 description: 'Format Drupal entities with site.standard.documenet lexicon'
-package: Atproto
+package: ATproto
 core_version_requirement: ^11.3
 dependencies:
   - atproto:atproto

@@ -1,7 +1,7 @@
-name: 'Atproto Client'
+name: 'ATproto Client'
 type: module
 description: 'Client for the Authenticated Protocol'
-package: Atproto
+package: ATproto
 core_version_requirement: ^11.3
 dependencies:
   - atproto:atproto

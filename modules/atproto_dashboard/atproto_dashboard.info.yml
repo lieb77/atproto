@@ -1,7 +1,7 @@
-name: 'Atproto Dashboard'
+name: 'ATproto Dashboard'
 type: module
-description: 'Atproto PDS Management for Drupal'
-package: Atproto
+description: 'ATproto PDS Management for Drupal'
+package: ATproto
 core_version_requirement: ^11.3
 dependencies:
   - atproto:atproto
