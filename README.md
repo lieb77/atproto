@@ -11,7 +11,21 @@ The submodules are:
 - Posts Drupal content as app.bsky.feed.post records
 - These will show up in the Bluesky app
 
-## ATProto Standard Site atproto_standard_site
+## ATproto Standard Site atproto_standard_site
 - Posts Drupal content as sites.standard.document records
 - These will show up on leaflet.pub and other sites that support this lexicon
+
+## ATproto Paullieberman atproto_paullieberman
+- Posts Drupal content as my custom net.paullieberman.bike.ride records
+- Provided as an example of using a custom lexicon
+
+## ATproto Dashboard atproto_dashboard
+- View and manage the atproto records in your repo
+
+# Dependencies
+- ECA - The modules provide Action Plugins for use with ECA. The module includes recipes for creating the ECA models.
+- Indieweb Webmention indieweb_webmention . This module provides the syndication and webmention entities used by these modules.
+- Drupal core ^11.3 although I'm sure most of this will work on earlier versions.
+
+# NOTE: this is Alpha code. Use at your own risk.
 
