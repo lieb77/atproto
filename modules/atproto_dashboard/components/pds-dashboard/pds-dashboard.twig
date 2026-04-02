@@ -20,6 +20,20 @@
 		
   	</nav>
 
+	<div id="pds-overlay-backdrop" class="pds-overlay-backdrop" style="display:none;">
+	  <div class="pds-overlay">
+		<button class="pds-overlay__close"
+		  hx-on:click="
+			document.getElementById('pds-overlay-backdrop').style.display='none';
+			document.getElementById('pds-overlay-content').innerHTML='';
+		  ">
+		  &times;
+		</button>
+		<div id="pds-overlay-content"></div>
+	  </div>
+	</div>
+
+
  	 <div id="pds-active-view" class="tab-content">
 		{# Initial load will be the ride view #}
     	{{ initial_view }}

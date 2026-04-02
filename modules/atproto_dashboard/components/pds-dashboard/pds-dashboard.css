@@ -3,12 +3,12 @@
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid #777;
+  border-bottom: 1px solid var(--maple-bg-card);
 }
 
 .pds-dashboard .tab-link {
-  background: #eee;
-  border: 1px solid #777;
+  background: var(--maple-bg-content);
+  border: 1px solid var(--maple-bg-card);
   border-bottom: none;
   padding: 0.75rem 1.25rem;
   cursor: pointer;
@@ -18,15 +18,16 @@
 }
 
 .pds-dashboard .tab-link:hover {
-  background: #ccc;
+  background: var(--maple-bg-card);
 }
 
 .pds-dashboard .tab-link.active {
-  background: #ccc;
-  color: #000;
+  background: var(--maple-bg-card);
+  color: var(--maple-link-base);
   font-weight: bold;
-  border-bottom: 2px solid #777;
+  border-bottom: 2px solid var(--maple-link-base);
 }
+
 
 /* HTMX Transitions & Indicators */
 /* Use this if you have an element with class .htmx-indicator in your HTML */
@@ -85,7 +86,7 @@
 }
 
 .pds-rides button:hover {
-	background-color: #eee;
+	background-color: var(--mable-link-hover);
 }
 
 .pds-overlay-backdrop {
@@ -99,7 +100,8 @@
 }
 
 .pds-overlay {
-  background: white;
+  background: var(--maple-bg-content);
+  color: var(--maple-text-content);
   border-radius: 4px;
   padding: 2rem;
   max-width: 600px;
