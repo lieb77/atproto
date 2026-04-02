@@ -40,7 +40,7 @@ class AtprotoDashboard {
 				'limit' 	 => 100
 			];
 			if ($cursor) {
-					$query['cursor'] = $cursor;
+				$query['cursor'] = $cursor;
 			}
 			try {
 				$response = $this->atprotoClient->listRecords($query);
@@ -48,6 +48,10 @@ class AtprotoDashboard {
 			catch (\Throwable $e) {
 				$this->logger()->error("Call to list records got error: @err",["@err" => $e->getMessage()]);
 				return NULL;
+			}
+			if (FALSE === $response){
+				$this->logger()->error("List records returned FALSE");
+				return [];
 			}
 
 			$records  = array_merge($records, $response->records);

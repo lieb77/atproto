@@ -79,15 +79,21 @@ class AtprotoClient {
 
         if ($session) {
             $this->session = $this->refreshSession($session);
+            if (!$this->session) {
+				// Refresh failed — clear the stale session from tempstore
+				// so we don't keep trying to refresh an expired token
+				$this->tempstore->delete('session');
+			}
         }
 
         if (!$this->session) {
             $key = $this->keyRepository->getKey($appKey)->getKeyValue();
             $this->session = $this->createSession($this->handle, $key);
         }
-
-        $this->tempstore->set('session', $this->session);
-        return $this->session;
+		 if ($this->session) {
+			$this->tempstore->set('session', $this->session);
+		}
+		return $this->session ?? FALSE;
     }
 
     /**
@@ -107,7 +113,7 @@ class AtprotoClient {
         $session = $this->getSession();
 
         if (!$session) {
-            $this->logger()->error("Could not establish a session for $endpoint");
+            $this->logger()->error("Could not establish a session for @end", [@end => $endpoint]);
             return FALSE;
         }
 
@@ -130,7 +136,7 @@ class AtprotoClient {
                 return json_decode($response->getBody()->getContents());
             }
         }
-        catch (\Exception $e) {
+        catch (\Throwable $e) {
             $this->logger()->error("atproto request to $endpoint failed: " . $e->getMessage());
         }
 
@@ -233,14 +239,21 @@ class AtprotoClient {
      *   The refreshed session object or FALSE on failure.
      */
     private function refreshSession(object $session): object|false {
-        $request = $this->httpClient->post(
-            $this->pdsUrl . $this->endpoints->refreshSession(),
-            [
-                'headers' => [
-                    'Authorization' => "Bearer " . $session->refreshJwt,
-                ],
-            ]
-        );
+
+		try {
+			$request = $this->httpClient->post(
+				$this->pdsUrl . $this->endpoints->refreshSession(),
+				[
+					'headers' => [
+						'Authorization' => "Bearer " . $session->refreshJwt,
+					],
+				]
+			);
+		}
+		catch (\Throwable $e) {
+			$this->logger()->error("Refresh session got: @err", ["@err" => $e->getMessage()]);
+			return FALSE;
+		}
 
         if ($request->getStatusCode() == 200) {
             $this->logger()->info("Session refreshed");
@@ -315,7 +328,8 @@ class AtprotoClient {
         	]);
         	return $response;
         }
-        catch(\Exception $e) {
+        catch(\Throwable $e) {
+        	$this->logger()->error("List records got @err", ["@err" => $e->getMessage()]);
         	return FALSE;
         }
         
@@ -331,7 +345,7 @@ class AtprotoClient {
         	]);
         	return $response;
         }
-        catch(\Exception $e) {
+        catch(\Throwable $e) {
         	return FALSE;
         }
         
@@ -349,7 +363,7 @@ class AtprotoClient {
 	        return $this->request('POST', $this->endpoints->putRecord(), [
     	        'json' => $params,
         	]);
-        }catch (\Exception $e) { 
+        }catch (\Throwable $e) { 
 			$this->logger()->error("PutRecord failed with @err", ["@err" => $e]);
 			return FALSE;
         }
@@ -374,7 +388,7 @@ class AtprotoClient {
                 'json' => $params,
             ]);
             return TRUE;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return FALSE;
         }
     }
