@@ -6,7 +6,7 @@ namespace Drupal\atproto_dashboard;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\atproto\AtprotoLoggerTrait;
-use Drupal\atproto_client\Client\AtprotoClient;
+use Drupal\atproto_client\AtprotoClientService;
 
 /**
  * Orchestrates the synchronization between Drupal Nodes and the PDS.
@@ -18,7 +18,7 @@ class AtprotoDashboard {
     protected $did;
     
     public function __construct(
-        protected AtprotoClient $atprotoClient,
+        protected AtprotoClientService $atprotoClient,
         protected LoggerChannelFactoryInterface $loggerFactory
     ) {
     	$this->setLoggerFactory($loggerFactory);

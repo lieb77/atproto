@@ -11,7 +11,7 @@ use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\atproto\AtprotoLoggerTrait;
-use Drupal\atproto_client\Client\AtprotoClient;
+use Drupal\atproto_client\AtprotoClientService;
 
 
 /**
@@ -27,7 +27,7 @@ final class AtprotoStandardSite {
   public function __construct(
     private readonly EntityTypeManagerInterface $entityTypeManager,
     protected LoggerChannelFactoryInterface $loggerFactory,
-    private readonly AtprotoClient $atprotoClient,
+    private readonly AtprotoClientService $atprotoClient,
     ) {
     	$this->setLoggerFactory($loggerFactory);
     }

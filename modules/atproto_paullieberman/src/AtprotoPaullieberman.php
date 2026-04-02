@@ -13,7 +13,7 @@ use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\atproto\AtprotoLoggerTrait;
-use Drupal\atproto_client\Client\AtprotoClient;
+use Drupal\atproto_client\AtprotoClientService;
 
 /**
  * Manages the custom Bike Ride lexicon on the PDS.
@@ -24,7 +24,7 @@ class AtprotoPaullieberman {
     protected $lexicon = 'net.paullieberman.bike.ride';
 
     public function __construct(
-        protected AtprotoClient $atprotoClient,
+        protected AtprotoClientService $atprotoClient,
         protected StateInterface $state,
         protected EntityTypeManagerInterface $entityTypeManager,
         protected LoggerChannelFactoryInterface $loggerFactory,
