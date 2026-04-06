@@ -118,10 +118,15 @@ class AtprotoBsky {
 		$syndications = $this->getSyndications();
 		foreach ($syndications as $syndication) {
 			if (!empty($syndication['at_uri'])) {
-				$this->logger()->info("Checking syndication of node @nid for webmentions.", [
-					'@nid' => $syndication['nid']
-				]);
-				$this->checkForWebmentions($syndication);
+				if (str_contains($syndication['url'], "leaflet.pub")) {
+					$this->logger()->info("Checking syndication of standard site not yest supported");
+				}
+				else {					
+					$this->logger()->info("Checking syndication of node @nid for webmentions.", [
+						'@nid' => $syndication['nid']
+					]);
+					$this->checkForWebmentions($syndication);
+				}
 			}
 		}
 	}

@@ -70,12 +70,14 @@ final class AtprotoStandardSite {
 				'record' 	 => $record,
 			]);
 			$this->logger()->notice("Created standard site record for blog post @title", ["@title" => $node->get('title')->value]);
-			return $response;
 		}
 		catch (\Throwable $e) {
       		$this->logger()->error("Post standard site record failed: " . $e->getMessage());
       		return FALSE;
 	 	}
+	 	
+	 	$this->createSyndicationEntity($node->id(), $response->uri);
+	 	return TRUE;
 	 }
 
 
@@ -153,4 +155,21 @@ final class AtprotoStandardSite {
       		return FALSE;
 	 	}
 	 }
-}
+	 
+	 /**
+	 * Create the syndication entity
+	 *
+	 * Note: We have extended the syndication entity to include the at_uri field
+	 */
+    private function createSyndicationEntity(string $nid, string $atUri): void {
+        $this->entityTypeManager->getStorage('indieweb_syndication')->create([
+            'entity_id' 	 => $nid,
+            'entity_type_id' => 'node',
+            'url' 			 => "https://leaflet.pub/p/paullieberman.net",
+            'at_uri' 		 => $atUri,
+        ])->save();
+        $this->logger()->info("Syndication saved for node @nid",["@nid" => $nid]);
+    }
+    
+// end-of-class    
+}	
