@@ -2,4 +2,4 @@ services:
 
   atproto_standard_site.service:
     class: Drupal\atproto_standard_site\AtprotoStandardSite
-    arguments: ['@entity_type.manager', '@logger.factory', '@atproto_client.client']
+    arguments: ['@entity_type.manager', '@logger.factory', '@atproto_client.service']

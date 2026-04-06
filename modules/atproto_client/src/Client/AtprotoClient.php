@@ -59,43 +59,7 @@ class AtprotoClient {
         }
     }
 
-    /**
-     * Gets the session.
-     *
-     * @return object|false
-     *   The session object or FALSE on failure.
-     */
-    protected function getSession(): object|false {
-        if ($this->session) {
-            return $this->session;
-        }
-
-        $appKey = $this->settings->get('app_key');
-        if (empty($this->handle) || empty($appKey)) {
-            return FALSE;
-        }
-
-        $session = $this->tempstore->get('session');
-
-        if ($session) {
-            $this->session = $this->refreshSession($session);
-            if (!$this->session) {
-				// Refresh failed — clear the stale session from tempstore
-				// so we don't keep trying to refresh an expired token
-				$this->tempstore->delete('session');
-			}
-        }
-
-        if (!$this->session) {
-            $key = $this->keyRepository->getKey($appKey)->getKeyValue();
-            $this->session = $this->createSession($this->handle, $key);
-        }
-		 if ($this->session) {
-			$this->tempstore->set('session', $this->session);
-		}
-		return $this->session ?? FALSE;
-    }
-
+    
     /**
      * Make an authenticated call to the PDS.
      *
@@ -174,17 +138,42 @@ class AtprotoClient {
     }
 
     /*************** Private functions *******************/
-
+    
     /**
-     * Saves the DID to configuration.
+     * Gets the session.
      *
-     * @param string $did
-     *   The DID to save.
+     * @return object|false
+     *   The session object or FALSE on failure.
      */
-    private function saveDid(string $did): void {
-        $this->configFactory->getEditable('atproto_client.settings')
-            ->set('did', $did)
-            ->save();
+    private function getSession(): object|false {
+        if ($this->session) {
+            return $this->session;
+        }
+
+        $appKey = $this->settings->get('app_key');
+        if (empty($this->handle) || empty($appKey)) {
+            return FALSE;
+        }
+
+        $session = $this->tempstore->get('session');
+
+        if ($session) {
+            $this->session = $this->refreshSession($session);
+            if (!$this->session) {
+				// Refresh failed — clear the stale session from tempstore
+				// so we don't keep trying to refresh an expired token
+				$this->tempstore->delete('session');
+			}
+        }
+
+        if (!$this->session) {
+            $key = $this->keyRepository->getKey($appKey)->getKeyValue();
+            $this->session = $this->createSession($this->handle, $key);
+        }
+		 if ($this->session) {
+			$this->tempstore->set('session', $this->session);
+		}
+		return $this->session ?? FALSE;
     }
 
     /**
@@ -272,7 +261,7 @@ class AtprotoClient {
      * @return string|false
      *   The DID or FALSE on failure.
      */
-    public function getDidForHandle(string $handle): string|false {
+    private function getDidForHandle(string $handle): string|false {
         if (empty($handle)) {
             return FALSE;
         }
@@ -292,6 +281,18 @@ class AtprotoClient {
             return $data->did;
         }
         return FALSE;
+    }
+
+	/**
+     * Saves the DID to configuration.
+     *
+     * @param string $did
+     *   The DID to save.
+     */
+    private function saveDid(string $did): void {
+        $this->configFactory->getEditable('atproto_client.settings')
+            ->set('did', $did)
+            ->save();
     }
 
     /**
@@ -314,147 +315,6 @@ class AtprotoClient {
         return FALSE;
     }
 
-
-
-    /** ***** Wrapper functions for requests *******  **/
-
- 	/**
-     * shorthand for com.atproto.repo.listRecords (GET)
-     */
-    public function listRecords(array $params): mixed {
-		try { 	
-       		$response = $this->request('GET', $this->endpoints->listRecords(), [
-            	'query' => $params,
-        	]);
-        	return $response;
-        }
-        catch(\Throwable $e) {
-        	$this->logger()->error("List records got @err", ["@err" => $e->getMessage()]);
-        	return FALSE;
-        }
-        
-    }
-
-	/**
-     * shorthand for com.atproto.repo.getRecord (GET)
-     */
-    public function getRecord(array $params): mixed {
-		try { 	
-       		$response = $this->request('GET', $this->endpoints->getRecord(), [
-            	'query' => $params,
-        	]);
-        	return $response;
-        }
-        catch(\Throwable $e) {
-        	return FALSE;
-        }
-        
-    }
-
-
-
-
-	/**
-     * shorthand for com.atproto.repo.putRecord (Usually POST)
-     */
-    public function putRecord(array $params): mixed {
-
-    	try{
-	        return $this->request('POST', $this->endpoints->putRecord(), [
-    	        'json' => $params,
-        	]);
-        }catch (\Throwable $e) { 
-			$this->logger()->error("PutRecord failed with @err", ["@err" => $e]);
-			return FALSE;
-        }
-    }
-
-    /**
-     * shorthand for com.atproto.repo.createRecord (POST)
-     */
-    public function createRecord(array $params): mixed {
-        return $this->request('POST', $this->endpoints->createRecord(), [
-            'json' => $params,
-        ]);
-    }
-
-   
-    /**
-     * shorthand for com.atproto.repo.deleteRecord (POST)
-     */
-    public function deleteRecord(array $params): bool {
-        try {
-            $this->request('POST', $this->endpoints->deleteRecord(), [
-                'json' => $params,
-            ]);
-            return TRUE;
-        } catch (\Throwable $e) {
-            return FALSE;
-        }
-    }
-
-    /**
-     * shorthand for app.bsky.feed.getPostThread (GET)
-     */
-    public function getPostThread(string $uri, int $depth = 1): mixed {
-        return $this->request('GET', $this->endpoints->getPostThread(), [
-            'query' => ['uri' => $uri, 'depth' => $depth],
-        ]);
-    }
-
-    /**
-     * shorthand for app.bsky.feed.getLikes (GET)
-     */
-    public function getLikes(string $uri, int $limit = 50): mixed {
-        return $this->request('GET', $this->endpoints->getLikes(), [
-            'query' => ['uri' => $uri, 'limit' => $limit],
-        ]);
-    }
-    
-    
-    public function getProfile(array $params): mixed {
-	    return $this->request('GET', $this->endpoints->getProfile(), [
-            'query' => $params,
-    	]);
-    }
-    
-    public function getFollowers(array $params): mixed {
-    	return $this->request('GET', $this->endpoints->getfollowers(), [
-            'query' => $params,
-    	]);
-    
-    }
-    
-	public function getFollows(array $params): mixed {
-    	return $this->request('GET', $this->endpoints->getfollows(), [
-            'query' => $params,
-    	]);
-    
-    }
-    
-    public function getTimeline(array $params): mixed {
-    	return $this->request('GET', $this->endpoints->getTimeline(), [
-            'query' => $params,
-    	]);
-    
-    }
-    
-    
-     public function getAuthorFeed(array $params): mixed {
-    	return $this->request('GET', $this->endpoints->getAuthorFeed(), [
-            'query' => $params,
-    	]);
-    
-    }
-    
-    public function searchPosts(array $params): mixed {
-    	return $this->request('GET', $this->endpoints->searchPosts(), [
-            'query' => $params,
-    	]);
-    
-    }
-    
-    
     
     // End of class
 }

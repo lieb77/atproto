@@ -3,7 +3,7 @@ services:
   atproto_paullieberman.service:
     class: Drupal\atproto_paullieberman\AtprotoPaullieberman
     arguments:
-      - '@atproto_client.client'
+      - '@atproto_client.service'
       - '@state'
       - '@entity_type.manager'
       - '@logger.factory'

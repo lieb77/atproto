@@ -12,3 +12,10 @@ services:
       - '@http_client'
       - '@tempstore.private'
       - '@atproto_client.endpoints'
+
+  atproto_client.service:
+    class: Drupal\atproto_client\AtprotoClientService
+    arguments:
+      - '@logger.factory'
+      - '@atproto_client.endpoints'
+      - '@atproto_client.client'

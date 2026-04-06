@@ -6,7 +6,7 @@ services:
   atproto_dashboard.dashboard:
     class: Drupal\atproto_dashboard\AtprotoDashboard
     arguments: 
-      - '@atproto_client.client'
+      - '@atproto_client.service'
       - '@logger.factory'
 
  
