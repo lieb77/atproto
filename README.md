@@ -26,6 +26,7 @@ The submodules are:
 - ECA - The modules provide Action Plugins for use with ECA. The module includes recipes for creating the ECA models.
 - Indieweb Webmention indieweb_webmention . This module provides the syndication and webmention entities used by these modules.
 - Drupal core ^11.3 although I'm sure most of this will work on earlier versions.
+- Drupal Key module for storing your app password securly.
 
 # NOTE: this is Alpha code. Use at your own risk.
 
