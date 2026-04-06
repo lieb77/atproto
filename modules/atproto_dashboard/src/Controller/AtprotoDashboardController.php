@@ -129,7 +129,9 @@ final class AtprotoDashboardController extends ControllerBase {
 	
 	}   
    
-
+    public function update(string $rkey): Response {
+		return new Response("", 200);
+	}
 
     /**
      * Deletes a record from the PDS
