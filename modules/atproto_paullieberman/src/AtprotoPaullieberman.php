@@ -77,7 +77,7 @@ class AtprotoPaullieberman {
         try {
             $this->atprotoClient->deleteRecord( 
             	[
-                    'repo' 		 =>  $this->$atprotoClient->getDid(),
+                    'repo' 		 =>  $this->atprotoClient->getDid(),
                     'collection' => $lexicon,
                     'rkey' 		 => $rkey,
                 ],
