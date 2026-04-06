@@ -49,7 +49,7 @@ class AtprotoPaullieberman {
         $isoDate     = $rideDateRaw ? $rideDateRaw . 'T12:00:00Z' : date('c', $node->getCreatedTime());
 
         $record = [
-            '$type' 	=> $lexicon,
+            '$type' 	=> $this->lexicon,
             'createdAt' => $isoDate,
             'route' 	=> $node->getTitle(),
             'miles' 	=> (int) $node->get('field_miles')->value,
@@ -61,7 +61,7 @@ class AtprotoPaullieberman {
 
         return $this->atprotoClient->putRecord( [            
 			'repo' 		 => $this->atprotoClient->getDid(),
-			'collection' => $lexicon,
+			'collection' => $this->lexicon,
 			'rkey' 		 => $rkey,
 			'record' 	 => $record,
         ]);
@@ -78,7 +78,7 @@ class AtprotoPaullieberman {
             $this->atprotoClient->deleteRecord( 
             	[
                     'repo' 		 =>  $this->atprotoClient->getDid(),
-                    'collection' => $lexicon,
+                    'collection' => $this->lexicon,
                     'rkey' 		 => $rkey,
                 ],
             );
