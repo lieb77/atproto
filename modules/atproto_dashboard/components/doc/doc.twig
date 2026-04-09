@@ -1,0 +1,28 @@
+<article>
+	<h2>{{ data.value.title }}</h2>
+	
+	{% if data.value.content %}
+		<h3>{{ data.value.content.route }}</h3>
+		<div class="ride-stats">
+			<p>
+				<span class="ride-label">Date:</span>
+				{{ data.value.content.date|date("F d, Y") }}
+			</p>
+			<p>
+				<span class="ride-label">Miles:</span>
+				{{ data.value.content.miles }}
+			</p>
+			<p>
+				<span class="ride-label">Bike:</span>
+				{{ data.value.content.bike }}
+			</p>
+			<p>
+				{{ data.value.content.body }}
+			</p>
+		</div>
+	{% else %}
+		<p><span>Published on:</span> {{ data.value.publishedAt|date("F d, Y") }}</p>
+		<p>{{ data.value.description }}</p>
+	{% endif %}
+	
+</article>

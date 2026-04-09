@@ -33,6 +33,13 @@ atproto_dashboard.view:
     _controller: '\Drupal\atproto_dashboard\Controller\AtprotoDashboardController::viewRecord'
   requirements:
     _permission: 'administer atproto'
+    
+atproto_dashboard.render:
+  path: '/atproto/dashboard/render/{type}/{rkey}'
+  defaults:
+    _controller: '\Drupal\atproto_dashboard\Controller\AtprotoDashboardController::renderRecord'
+  requirements:
+    _permission: 'administer atproto'
           
 atproto_dashboard.update:
   path: '/atproto/dashboard/update/{rkey}'

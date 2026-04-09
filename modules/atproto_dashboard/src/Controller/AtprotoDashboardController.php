@@ -79,6 +79,7 @@ final class AtprotoDashboardController extends ControllerBase {
         return new Response(trim((string) $this->renderer->renderInIsolation($build)));
     }
 
+
     /**
      * Doc View.
      */
@@ -119,9 +120,9 @@ final class AtprotoDashboardController extends ControllerBase {
 		$record = $this->atprotoDashboard->getRecord($type, $rkey);
 
 	    $build = [
-            '#type' => 'component',
+            '#type'      => 'component',
             '#component' => 'atproto_dashboard:json',
-            '#props' => ['json' => $record],
+            '#props'     => ['json' => $record],
         ];
 
         return new Response(trim((string) $this->renderer->renderInIsolation($build)));
@@ -129,8 +130,29 @@ final class AtprotoDashboardController extends ControllerBase {
 	
 	}   
    
-    public function update(string $rkey): Response {
-		return new Response("", 200);
+   /**
+	 * Render record
+	 *
+	 */
+	public function renderRecord(string $type, string $rkey): Response {
+	
+		$record = $this->atprotoDashboard->getRecord($type, $rkey);
+
+	    $build = [
+            '#type'      => 'component',
+            '#component' => 'atproto_dashboard:' . $type,
+            '#props'     => ['data' => $record],
+        ];
+
+        return new Response(trim((string) $this->renderer->renderInIsolation($build)));
+	}   
+   
+   
+   
+    public function update(string $rkey): Response {    
+    	   
+        return new Response("Ok",200);
+
 	}
 
     /**
