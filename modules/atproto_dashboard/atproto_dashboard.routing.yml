@@ -2,7 +2,7 @@ atproto_dashboard.dashboard:
   path: '/atproto/dashboard'
   defaults:
     _controller: '\Drupal\atproto_dashboard\Controller\AtprotoDashboardController::dashboardShell'
-    _title: 'ATptoto Dashboard'
+    _title: 'ATproto Dashboard'
   requirements:
     _permission: 'administer atproto'
 
