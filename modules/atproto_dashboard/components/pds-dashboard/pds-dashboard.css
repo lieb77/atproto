@@ -102,6 +102,7 @@
 .pds-overlay {
   background: var(--maple-bg-content);
   color: var(--maple-text-content);
+  border: 1px solid var(--maple-border-medium);
   border-radius: 4px;
   padding: 1rem;
   max-width: 800px;

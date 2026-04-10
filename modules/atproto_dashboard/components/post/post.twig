@@ -1,0 +1,14 @@
+<article>
+	{% if data.value.embed.external.title %}
+		<h2>{{ data.value.embed.external.title }}</h2>
+		<p>{{ data.value.embed.external.description }}</p>
+		<p>{{ data.value.text| nl2br  }}</p>
+	{% else %}	
+		<h2>{{ data.value.text }}</h2>
+		<p><span>Published on:</span> {{ data.value.creatededAt|date("F d, Y") }}</p>
+		{# dump(data) #}
+		{% if data.url %}		
+			<img src="{{ data.url }}" alt="Post image" width=400 />
+		{% endif %}
+	{% endif %}	
+</article>

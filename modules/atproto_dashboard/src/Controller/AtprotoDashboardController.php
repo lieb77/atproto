@@ -138,6 +138,13 @@ final class AtprotoDashboardController extends ControllerBase {
 	
 		$record = $this->atprotoDashboard->getRecord($type, $rkey);
 
+		// Post might contain an image
+		if ($type == 'post' && !empty($record->value->embed->images)) {
+			$cid = $record->value->embed->images[0]->image->ref->{'$link'};
+			$record->url = $this->atprotoDashboard->getBlobUrl($cid);
+		}
+
+
 	    $build = [
             '#type'      => 'component',
             '#component' => 'atproto_dashboard:' . $type,
