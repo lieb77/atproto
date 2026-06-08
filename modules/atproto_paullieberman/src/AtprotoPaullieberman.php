@@ -59,6 +59,7 @@ class AtprotoPaullieberman {
             'body' 		=> MailFormatHelper::htmlToText($node->body->value),
         ];
 
+        $this->logger()->notice("In PostRide, about to call putRecord");
         return $this->atprotoClient->putRecord( [            
 			'repo' 		 => $this->atprotoClient->getDid(),
 			'collection' => $this->lexicon,

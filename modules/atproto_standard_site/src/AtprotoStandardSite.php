@@ -29,7 +29,7 @@ final class AtprotoStandardSite {
     protected LoggerChannelFactoryInterface $loggerFactory,
     private readonly AtprotoClientService $atprotoClient,
     ) {
-    	$this->setLoggerFactory($loggerFactory);
+        $this->setLoggerFactory($loggerFactory);
     }
  
 
@@ -38,7 +38,6 @@ final class AtprotoStandardSite {
 	 *
 	 */
 	public function postToStandardSite(NodeInterface $node): mixed {
-
 		// Get did from client
 		$did = $this->atprotoClient->getDid();
 
@@ -87,6 +86,7 @@ final class AtprotoStandardSite {
 	 */
 	public function rideToStandardSite(NodeInterface $node): mixed {
 
+        $this->logger()->notice("Entered rideToStandardSite");
 		// Get did from client
 		$did = $this->atprotoClient->getDid();
 
