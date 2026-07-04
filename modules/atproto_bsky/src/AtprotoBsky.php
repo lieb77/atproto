@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * @To-do:
+ *   Standard site documents can now be embedded in Bluesky posts
+ *   see https://github.com/bluesky-social/atproto/discussions/4978
+ *
+ */
+
+
 declare(strict_types=1);
 
 namespace Drupal\atproto_bsky;

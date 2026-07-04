@@ -1,4 +1,62 @@
 <?php
+/*
+ * @to-do:
+ * Add link to blog post
+ *     <link rel="site.standard.document" href="at://did:plc:your-did/site.standard.document/the-record-rkey" />
+ * Add image
+ *  Here is some JS that creates the blob and dies this. Need to find the php
+ *      
+import fs from "fs";
+import { AtpAgent } from "@atproto/api";
+const agent = new AtpAgent({ service: "<https://bsky.social>" });
+
+async function uploadImageAndPublishDocument() {
+  await agent.login({
+    identifier: "your-handle.bsky.social",
+    password: "your-app-password",
+  });
+
+  const did = agent.session.did;
+
+  // 1. Read the local image file into a buffer
+  const imageBuffer = fs.readFileSync("./path/to/your/cover.jpg");
+
+  // 2. Upload the blob to your repository
+  const { data: blobResponse } = await agent.com.atproto.repo.uploadBlob(
+    imageBuffer,
+    { encoding: "image/jpeg" }
+  );
+
+  console.log("Blob successfully uploaded!");
+
+  // 3. Define the Document Record, attaching the returned blob reference
+  const documentRecord = {
+    $type: "site.standard.document",
+    site: `at://your-did/site.standard.publication/your-pub-rkey`,
+    title: "My New Post with a Cover Image",
+    publishedAt: "2026-06-18T12:00:00.000Z",
+    cover: blobResponse.blob, // This links the blob to your document
+  };
+
+  // 4. Write the document record to your repository
+  try {
+    const response = await agent.com.atproto.repo.createRecord({
+      repo: did,
+      collection: "site.standard.document",
+      record: documentRecord,
+    });
+
+    console.log("Document record with cover image published:");
+    console.log(response.data.uri);
+  } catch (error) {
+    console.error("Failed to publish document:", error);
+  }
+}
+
+uploadImageAndPublishDocument();
+
+ */
+
 
 declare(strict_types=1);
 
