@@ -228,6 +228,14 @@ final class AtprotoStandardSite {
         ])->save();
         $this->logger()->info("Syndication saved for node @nid",["@nid" => $nid]);
     }
-    
+
+     /**
+	 * Post a link to the SS document on Bluesky
+	 *
+	 */
+    private function SSDoc2BSPost(string $nid, string $atUri): void {
+        
+    }
+ 
 // end-of-class    
 }	
