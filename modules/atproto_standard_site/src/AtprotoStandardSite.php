@@ -1,8 +1,7 @@
 <?php
 /*
  * @to-do:
- * Add link to blog post
- *     <link rel="site.standard.document" href="at://did:plc:your-did/site.standard.document/the-record-rkey" />
+ *
  * Add image
  *  Here is some JS that creates the blob and dies this. Need to find the php
  *      
@@ -123,7 +122,7 @@ final class AtprotoStandardSite {
 			$response = $this->atprotoClient->putRecord( [
 				'repo' 		 => $did,
 				'collection' => 'site.standard.document',
-				'rkey'		 => $node->uuid(),
+				'rkey'		 => substr($node->uuid(),0,12),
 				'record' 	 => $record,
 			]);
 			$this->logger()->notice("Created standard site record for blog post @title", ["@title" => $node->get('title')->value]);
@@ -202,7 +201,7 @@ final class AtprotoStandardSite {
 			$response = $this->atprotoClient->putRecord( [
 				'repo' 		 => $did,
 				'collection' => 'site.standard.document',
-				'rkey'		 => $node->uuid(),
+				'rkey'		 => substr($node->uuid(),0,12),
 				'record' 	 => $record,
 			]);
 			$this->logger()->notice("Created standard site record for ride  @title", ["@title" => $node->get('title')->value]);

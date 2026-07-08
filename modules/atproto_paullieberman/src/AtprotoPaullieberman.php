@@ -41,7 +41,7 @@ class AtprotoPaullieberman {
      */
     public function PostRide(NodeInterface $node): mixed {
     
-        $rkey 	  = $node->uuid();
+        $rkey 	  = substr($node->uuid(), 0, 12);
         $bid 	  = $node->field_bike->target_id;
         $bikeName = $bid ? Node::load($bid)->getTitle() : 'Unknown Bike';
 
@@ -73,7 +73,7 @@ class AtprotoPaullieberman {
      * Deletes a ride from the PDS.
      */
     public function deleteRide(NodeInterface $node): bool {
-    	$rkey = $node->uuid();
+        $rkey  = substr($node->uuid(), 0, 12);
     	
         try {
             $this->atprotoClient->deleteRecord( 
