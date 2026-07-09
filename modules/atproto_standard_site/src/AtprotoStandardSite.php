@@ -122,7 +122,7 @@ final class AtprotoStandardSite {
 			$response = $this->atprotoClient->putRecord( [
 				'repo' 		 => $did,
 				'collection' => 'site.standard.document',
-				'rkey'		 => substr($node->uuid(),0,12),
+				'rkey'		 => $this->generateTid();,
 				'record' 	 => $record,
 			]);
 			$this->logger()->notice("Created standard site record for blog post @title", ["@title" => $node->get('title')->value]);
@@ -201,7 +201,7 @@ final class AtprotoStandardSite {
 			$response = $this->atprotoClient->putRecord( [
 				'repo' 		 => $did,
 				'collection' => 'site.standard.document',
-				'rkey'		 => substr($node->uuid(),0,12),
+				'rkey'		 => $this->generateTid(); 
 				'record' 	 => $record,
 			]);
 			$this->logger()->notice("Created standard site record for ride  @title", ["@title" => $node->get('title')->value]);
@@ -229,12 +229,33 @@ final class AtprotoStandardSite {
     }
 
      /**
-	 * Post a link to the SS document on Bluesky
-	 *
+	 * Generate the TID for the Rkey
 	 */
-    private function SSDoc2BSPost(string $nid, string $atUri): void {
-        
+    private function generateTid(?int $customMicroTime = null, int $customClockId = null): string {
+    // 1. Determine microtime
+    $microTime = $customMicroTime ?? (int)(microtime(true) * 1000000);
+
+    // 2. Generate or use provided random clock ID (10 bits = 0 to 1023)
+    $clockId = $customClockId ?? mt_rand(0, 1023);
+
+    // 3. Pack bits (Top bit 0 + 53 bits time + 10 bits clockId)
+    // 64-bit PHP is required for bitwise shift safety
+    $packed = ($microTime << 10) | ($clockId & 0x3FF);
+
+    // 4. Base32 alphabet for ATProtocol: 2-7, a-z (excluding 0, 1, 8, 9 to prevent confusion)
+    $alphabet = '234567abcdefghijklmnopqrstuvwxyz';
+    $base32 = '';
+
+    // 5. Convert to Base32
+    $temp = $packed;
+    while ($temp > 0) {
+        $base32 = $alphabet[$temp & 0x1F] . $base32;
+        $temp >>= 5;
     }
- 
+
+    // 6. Pad to exactly 13 characters
+    return str_pad($base32, 13, '2', STR_PAD_LEFT);
+}
+
 // end-of-class    
 }	
