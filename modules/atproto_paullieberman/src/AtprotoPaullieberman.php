@@ -73,7 +73,7 @@ class AtprotoPaullieberman {
      * Deletes a ride from the PDS.
      */
     public function deleteRide(NodeInterface $node): bool {
-        $rkey  =  $his->generateTid();
+        $rkey  =  $this->generateTid();
     	
         try {
             $this->atprotoClient->deleteRecord( 
