@@ -18,12 +18,13 @@
 		</button>
 	</td>
 	<td>	
-		<button data-hx-post="/atproto/dashboard/update/{{ doc.rkey }}"
-			data-hx-target="closest tr"
-			data-hx-swap="outerHTML"
-			class="button--small">
-		  Edit
-		</button>
+		<button data-hx-post="/atproto/dashboard/render/doc/{{ doc.rkey }}"
+				data-hx-target="#pds-overlay-content"
+				data-hx-swap="innerHTML"
+				hx-on::after-request="document.getElementById('pds-overlay-backdrop').style.display='flex';"
+				class="button--small">
+				Render
+			</button>
 	</td>
 	<td>	
 		<button data-hx-delete="/atproto/dashboard/delete/{{ doc.rkey }}"

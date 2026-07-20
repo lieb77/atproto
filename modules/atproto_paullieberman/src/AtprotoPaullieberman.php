@@ -41,7 +41,7 @@ class AtprotoPaullieberman {
      */
     public function PostRide(NodeInterface $node): mixed {
     
-        $rkey 	  = $node->uuid();
+        $rkey 	  =  $this->generateTid();
         $bid 	  = $node->field_bike->target_id;
         $bikeName = $bid ? Node::load($bid)->getTitle() : 'Unknown Bike';
 
@@ -49,7 +49,7 @@ class AtprotoPaullieberman {
         $isoDate     = $rideDateRaw ? $rideDateRaw . 'T12:00:00Z' : date('c', $node->getCreatedTime());
 
         $record = [
-            '$type' 	=> $lexicon,
+            '$type' 	=> $this->lexicon,
             'createdAt' => $isoDate,
             'route' 	=> $node->getTitle(),
             'miles' 	=> (int) $node->get('field_miles')->value,
@@ -59,9 +59,10 @@ class AtprotoPaullieberman {
             'body' 		=> MailFormatHelper::htmlToText($node->body->value),
         ];
 
+        $this->logger()->notice("In PostRide, about to call putRecord");
         return $this->atprotoClient->putRecord( [            
 			'repo' 		 => $this->atprotoClient->getDid(),
-			'collection' => $lexicon,
+			'collection' => $this->lexicon,
 			'rkey' 		 => $rkey,
 			'record' 	 => $record,
         ]);
@@ -72,13 +73,13 @@ class AtprotoPaullieberman {
      * Deletes a ride from the PDS.
      */
     public function deleteRide(NodeInterface $node): bool {
-    	$rkey = $node->uuid();
+        $rkey  =  $this->generateTid();
     	
         try {
             $this->atprotoClient->deleteRecord( 
             	[
                     'repo' 		 =>  $this->atprotoClient->getDid(),
-                    'collection' => $lexicon,
+                    'collection' => $this->lexicon,
                     'rkey' 		 => $rkey,
                 ],
             );
@@ -90,6 +91,34 @@ class AtprotoPaullieberman {
         }
     }
 
+    /**
+         * Generate the TID for the Rkey
+         */
+    private function generateTid(int $customMicroTime = null, int $customClockId = null): string {
+    // 1. Determine microtime
+    $microTime = $customMicroTime ?? (int)(microtime(true) * 1000000);
+
+    // 2. Generate or use provided random clock ID (10 bits = 0 to 1023)
+    $clockId = $customClockId ?? mt_rand(0, 1023);
+
+    // 3. Pack bits (Top bit 0 + 53 bits time + 10 bits clockId)
+    // 64-bit PHP is required for bitwise shift safety
+    $packed = ($microTime << 10) | ($clockId & 0x3FF);
+
+    // 4. Base32 alphabet for ATProtocol: 2-7, a-z (excluding 0, 1, 8, 9 to prevent confusion)
+    $alphabet = '234567abcdefghijklmnopqrstuvwxyz';
+    $base32 = '';
+
+    // 5. Convert to Base32
+    $temp = $packed;
+    while ($temp > 0) {
+        $base32 = $alphabet[$temp & 0x1F] . $base32;
+        $temp >>= 5;
+    }
+
+    // 6. Pad to exactly 13 characters
+    return str_pad($base32, 13, '2', STR_PAD_LEFT);
+}
  
 
 // end-of-class

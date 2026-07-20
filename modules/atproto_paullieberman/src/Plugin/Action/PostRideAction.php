@@ -43,7 +43,7 @@ final class PostRideAction extends ActionBase implements ContainerFactoryPluginI
     /**
      * {@inheritdoc}
      */
-	public function execute($entity = NULL): void {
+    public function execute($entity = NULL): void {
 		if (!$entity instanceof \Drupal\node\NodeInterface) {
 			return;
 		}	

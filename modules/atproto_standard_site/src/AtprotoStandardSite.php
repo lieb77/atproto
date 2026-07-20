@@ -1,4 +1,61 @@
 <?php
+/*
+ * @to-do:
+ *
+ * Add image
+ *  Here is some JS that creates the blob and dies this. Need to find the php
+ *      
+import fs from "fs";
+import { AtpAgent } from "@atproto/api";
+const agent = new AtpAgent({ service: "<https://bsky.social>" });
+
+async function uploadImageAndPublishDocument() {
+  await agent.login({
+    identifier: "your-handle.bsky.social",
+    password: "your-app-password",
+  });
+
+  const did = agent.session.did;
+
+  // 1. Read the local image file into a buffer
+  const imageBuffer = fs.readFileSync("./path/to/your/cover.jpg");
+
+  // 2. Upload the blob to your repository
+  const { data: blobResponse } = await agent.com.atproto.repo.uploadBlob(
+    imageBuffer,
+    { encoding: "image/jpeg" }
+  );
+
+  console.log("Blob successfully uploaded!");
+
+  // 3. Define the Document Record, attaching the returned blob reference
+  const documentRecord = {
+    $type: "site.standard.document",
+    site: `at://your-did/site.standard.publication/your-pub-rkey`,
+    title: "My New Post with a Cover Image",
+    publishedAt: "2026-06-18T12:00:00.000Z",
+    cover: blobResponse.blob, // This links the blob to your document
+  };
+
+  // 4. Write the document record to your repository
+  try {
+    const response = await agent.com.atproto.repo.createRecord({
+      repo: did,
+      collection: "site.standard.document",
+      record: documentRecord,
+    });
+
+    console.log("Document record with cover image published:");
+    console.log(response.data.uri);
+  } catch (error) {
+    console.error("Failed to publish document:", error);
+  }
+}
+
+uploadImageAndPublishDocument();
+
+ */
+
 
 declare(strict_types=1);
 
@@ -29,7 +86,7 @@ final class AtprotoStandardSite {
     protected LoggerChannelFactoryInterface $loggerFactory,
     private readonly AtprotoClientService $atprotoClient,
     ) {
-    	$this->setLoggerFactory($loggerFactory);
+        $this->setLoggerFactory($loggerFactory);
     }
  
 
@@ -38,7 +95,6 @@ final class AtprotoStandardSite {
 	 *
 	 */
 	public function postToStandardSite(NodeInterface $node): mixed {
-
 		// Get did from client
 		$did = $this->atprotoClient->getDid();
 
@@ -66,7 +122,7 @@ final class AtprotoStandardSite {
 			$response = $this->atprotoClient->putRecord( [
 				'repo' 		 => $did,
 				'collection' => 'site.standard.document',
-				'rkey'		 => $node->uuid(),
+				'rkey'		 => $this->generateTid(),
 				'record' 	 => $record,
 			]);
 			$this->logger()->notice("Created standard site record for blog post @title", ["@title" => $node->get('title')->value]);
@@ -87,6 +143,7 @@ final class AtprotoStandardSite {
 	 */
 	public function rideToStandardSite(NodeInterface $node): mixed {
 
+        $this->logger()->notice("Entered rideToStandardSite");
 		// Get did from client
 		$did = $this->atprotoClient->getDid();
 
@@ -144,7 +201,7 @@ final class AtprotoStandardSite {
 			$response = $this->atprotoClient->putRecord( [
 				'repo' 		 => $did,
 				'collection' => 'site.standard.document',
-				'rkey'		 => $node->uuid(),
+				'rkey'		 => $this->generateTid(), 
 				'record' 	 => $record,
 			]);
 			$this->logger()->notice("Created standard site record for ride  @title", ["@title" => $node->get('title')->value]);
@@ -170,6 +227,35 @@ final class AtprotoStandardSite {
         ])->save();
         $this->logger()->info("Syndication saved for node @nid",["@nid" => $nid]);
     }
-    
+
+     /**
+	 * Generate the TID for the Rkey
+	 */
+    private function generateTid(?int $customMicroTime = null, int $customClockId = null): string {
+    // 1. Determine microtime
+    $microTime = $customMicroTime ?? (int)(microtime(true) * 1000000);
+
+    // 2. Generate or use provided random clock ID (10 bits = 0 to 1023)
+    $clockId = $customClockId ?? mt_rand(0, 1023);
+
+    // 3. Pack bits (Top bit 0 + 53 bits time + 10 bits clockId)
+    // 64-bit PHP is required for bitwise shift safety
+    $packed = ($microTime << 10) | ($clockId & 0x3FF);
+
+    // 4. Base32 alphabet for ATProtocol: 2-7, a-z (excluding 0, 1, 8, 9 to prevent confusion)
+    $alphabet = '234567abcdefghijklmnopqrstuvwxyz';
+    $base32 = '';
+
+    // 5. Convert to Base32
+    $temp = $packed;
+    while ($temp > 0) {
+        $base32 = $alphabet[$temp & 0x1F] . $base32;
+        $temp >>= 5;
+    }
+
+    // 6. Pad to exactly 13 characters
+    return str_pad($base32, 13, '2', STR_PAD_LEFT);
+}
+
 // end-of-class    
 }	

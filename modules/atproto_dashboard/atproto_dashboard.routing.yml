@@ -2,7 +2,7 @@ atproto_dashboard.dashboard:
   path: '/atproto/dashboard'
   defaults:
     _controller: '\Drupal\atproto_dashboard\Controller\AtprotoDashboardController::dashboardShell'
-    _title: 'ATptoto Dashboard'
+    _title: 'ATproto Dashboard'
   requirements:
     _permission: 'administer atproto'
 
@@ -31,6 +31,13 @@ atproto_dashboard.view:
   path: '/atproto/dashboard/view/{type}/{rkey}'
   defaults:
     _controller: '\Drupal\atproto_dashboard\Controller\AtprotoDashboardController::viewRecord'
+  requirements:
+    _permission: 'administer atproto'
+    
+atproto_dashboard.render:
+  path: '/atproto/dashboard/render/{type}/{rkey}'
+  defaults:
+    _controller: '\Drupal\atproto_dashboard\Controller\AtprotoDashboardController::renderRecord'
   requirements:
     _permission: 'administer atproto'
           

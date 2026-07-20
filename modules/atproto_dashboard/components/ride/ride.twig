@@ -1,0 +1,26 @@
+{# components/ride/ride.twig #}
+
+<article class="h-entry bike-ride">
+	<h2>🚲Lieb's Ride Log🚲</h2>
+	<h3>{{ data.value.route }}</h3>
+	
+	<div class="ride-body e-content">
+		<div class="ride-stats">
+		<p>
+			<span class="ride-label">Date:</span>
+			{{ data.value.date|date("F d, Y") }}
+		</p>
+		<p>
+			<span class="ride-label">Miles:</span>
+			{{ data.value.miles }}
+		</p>
+		<p>
+			<span class="ride-label">Bike:</span>
+			{{ data.value.bike }}
+		</p>
+		<p>
+			{{ data.value.body }}
+		</p>
+	</div>
+
+</article>

@@ -167,6 +167,18 @@ class AtprotoDashboard {
    		return $record;
    } 
    
+   /**
+    * Get Blob URL
+    *
+    */
+    public function getBlobUrl($cid){
+    
+    	return "https://banjo.paullieberman.org/xrpc/com.atproto.sync.getBlob?did="
+    		. $this->did . "&cid=" . $cid;
+    }
+   
+   
+   
     /**
      * Deletes a ride from the PDS.
      */
