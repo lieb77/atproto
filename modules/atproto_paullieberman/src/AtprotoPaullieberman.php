@@ -41,7 +41,7 @@ class AtprotoPaullieberman {
      */
     public function PostRide(NodeInterface $node): mixed {
     
-        $rkey 	  =  $his->generateTid();
+        $rkey 	  =  $this->generateTid();
         $bid 	  = $node->field_bike->target_id;
         $bikeName = $bid ? Node::load($bid)->getTitle() : 'Unknown Bike';
 
@@ -94,7 +94,7 @@ class AtprotoPaullieberman {
     /**
          * Generate the TID for the Rkey
          */
-    private function generateTid(?int $customMicroTime = null, int $customClockId = null): string {
+    private function generateTid(int $customMicroTime = null, int $customClockId = null): string {
     // 1. Determine microtime
     $microTime = $customMicroTime ?? (int)(microtime(true) * 1000000);
 
