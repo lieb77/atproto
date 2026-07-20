@@ -122,7 +122,7 @@ final class AtprotoStandardSite {
 			$response = $this->atprotoClient->putRecord( [
 				'repo' 		 => $did,
 				'collection' => 'site.standard.document',
-				'rkey'		 => $this->generateTid();,
+				'rkey'		 => $this->generateTid(),
 				'record' 	 => $record,
 			]);
 			$this->logger()->notice("Created standard site record for blog post @title", ["@title" => $node->get('title')->value]);
@@ -201,7 +201,7 @@ final class AtprotoStandardSite {
 			$response = $this->atprotoClient->putRecord( [
 				'repo' 		 => $did,
 				'collection' => 'site.standard.document',
-				'rkey'		 => $this->generateTid(); 
+				'rkey'		 => $this->generateTid(), 
 				'record' 	 => $record,
 			]);
 			$this->logger()->notice("Created standard site record for ride  @title", ["@title" => $node->get('title')->value]);
