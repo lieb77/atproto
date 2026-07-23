@@ -173,5 +173,9 @@ class EndPoints
     {
         return '/xrpc/app.bsky.feed.getAuthorFeed';
     }
-
+    
+    public function uploadBlob()
+    {
+        return '/xrpc/com.atproto.repo.uploadBlob';
+    }
 }

@@ -100,6 +100,35 @@ class AtprotoClientService {
 			return FALSE;
         }
     }
+    
+	/**
+ 	 * Uploads a blob (file) to the PDS.
+	 *
+	 * @param string $filePath
+	 *   Absolute path to the file to upload.
+	 * @param string $mimeType
+	 *   MIME type of the file.
+	 *
+	 * @return array
+	 *   The uploadBlob response including the blob reference.
+	 *
+	 * @throws \RuntimeException
+	 */
+	public function uploadBlob(string $filePath, string $mimeType): array {
+		$contents = file_get_contents($filePath);
+		if ($contents === false) {
+		  throw new \RuntimeException("Failed to read file: {$filePath}");
+		}
+		
+		return $this->atprotoClient->request('POST', $this->endpoints->uploadBlob(), [
+		  'body' => $contents,
+		  'headers' => [
+			'Content-Type' => $mimeType,
+		  ],
+		  'timeout' => 60,
+		]);
+	}
+    
 
    
     /**
