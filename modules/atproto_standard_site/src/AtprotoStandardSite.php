@@ -1,61 +1,7 @@
 <?php
 /*
  * @to-do:
- *
- * Add image
- *  Here is some JS that creates the blob and dies this. Need to find the php
- *      
-import fs from "fs";
-import { AtpAgent } from "@atproto/api";
-const agent = new AtpAgent({ service: "<https://bsky.social>" });
-
-async function uploadImageAndPublishDocument() {
-  await agent.login({
-    identifier: "your-handle.bsky.social",
-    password: "your-app-password",
-  });
-
-  const did = agent.session.did;
-
-  // 1. Read the local image file into a buffer
-  const imageBuffer = fs.readFileSync("./path/to/your/cover.jpg");
-
-  // 2. Upload the blob to your repository
-  const { data: blobResponse } = await agent.com.atproto.repo.uploadBlob(
-    imageBuffer,
-    { encoding: "image/jpeg" }
-  );
-
-  console.log("Blob successfully uploaded!");
-
-  // 3. Define the Document Record, attaching the returned blob reference
-  const documentRecord = {
-    $type: "site.standard.document",
-    site: `at://your-did/site.standard.publication/your-pub-rkey`,
-    title: "My New Post with a Cover Image",
-    publishedAt: "2026-06-18T12:00:00.000Z",
-    cover: blobResponse.blob, // This links the blob to your document
-  };
-
-  // 4. Write the document record to your repository
-  try {
-    const response = await agent.com.atproto.repo.createRecord({
-      repo: did,
-      collection: "site.standard.document",
-      record: documentRecord,
-    });
-
-    console.log("Document record with cover image published:");
-    console.log(response.data.uri);
-  } catch (error) {
-    console.error("Failed to publish document:", error);
-  }
-}
-
-uploadImageAndPublishDocument();
-
  */
-
 
 declare(strict_types=1);
 
@@ -97,6 +43,16 @@ final class AtprotoStandardSite {
 	public function postToStandardSite(NodeInterface $node): mixed {
 		// Get did from client
 		$did = $this->atprotoClient->getDid();
+        
+        // Check for an embedded image
+        // Note: My blog content type does not have an image field
+        // I should add one, but I'll try this first.
+        $imageUrl = $this->checkForImage($node->body->value);
+        if ($imageUrl) {
+            // create a blob and get it's at:// path
+            // add blob reference to SS document
+        }
+
 
 		// Build the tags array
 		$tags = [];
@@ -232,30 +188,68 @@ final class AtprotoStandardSite {
 	 * Generate the TID for the Rkey
 	 */
     private function generateTid(?int $customMicroTime = null, int $customClockId = null): string {
-    // 1. Determine microtime
-    $microTime = $customMicroTime ?? (int)(microtime(true) * 1000000);
+        // 1. Determine microtime
+        $microTime = $customMicroTime ?? (int)(microtime(true) * 1000000);
 
-    // 2. Generate or use provided random clock ID (10 bits = 0 to 1023)
-    $clockId = $customClockId ?? mt_rand(0, 1023);
+        // 2. Generate or use provided random clock ID (10 bits = 0 to 1023)
+        $clockId = $customClockId ?? mt_rand(0, 1023);
 
-    // 3. Pack bits (Top bit 0 + 53 bits time + 10 bits clockId)
-    // 64-bit PHP is required for bitwise shift safety
-    $packed = ($microTime << 10) | ($clockId & 0x3FF);
+        // 3. Pack bits (Top bit 0 + 53 bits time + 10 bits clockId)
+        // 64-bit PHP is required for bitwise shift safety
+        $packed = ($microTime << 10) | ($clockId & 0x3FF);
 
-    // 4. Base32 alphabet for ATProtocol: 2-7, a-z (excluding 0, 1, 8, 9 to prevent confusion)
-    $alphabet = '234567abcdefghijklmnopqrstuvwxyz';
-    $base32 = '';
+        // 4. Base32 alphabet for ATProtocol: 2-7, a-z (excluding 0, 1, 8, 9 to prevent confusion)
+        $alphabet = '234567abcdefghijklmnopqrstuvwxyz';
+        $base32 = '';
 
-    // 5. Convert to Base32
-    $temp = $packed;
-    while ($temp > 0) {
-        $base32 = $alphabet[$temp & 0x1F] . $base32;
-        $temp >>= 5;
+        // 5. Convert to Base32
+        $temp = $packed;
+        while ($temp > 0) {
+            $base32 = $alphabet[$temp & 0x1F] . $base32;
+            $temp >>= 5;
+        }
+
+        // 6. Pad to exactly 13 characters
+        return str_pad($base32, 13, '2', STR_PAD_LEFT);
     }
 
-    // 6. Pad to exactly 13 characters
-    return str_pad($base32, 13, '2', STR_PAD_LEFT);
-}
+    /**
+     * check to see if there is an embedded image
+     * and extract the absolute URL of the file
+     */ 
+    public function checkForImage(NodeInterface $node): mixed {
+        $url = FALSE;
+
+        return $url;
+    }
+
+    // Gemini gave me this code which I have not tested
+    //
+    // use Drupal\media\Entity\Media;
+
+// $html = '</drupal-media>';
+
+// 1. Extract data-entity-uuid using regex
+// if (preg_match('/data-entity-uuid="([^"]+)"/', $html, $matches)) {
+//    $uuid = $matches[1];//
+
+    // 2. Load the media entity by UUID
+//    $media = \Drupal::service('entity.repository')->loadEntityByUuid('media', $uuid);
+
+//    if ($media instanceof Media) {
+//        // 3. Get the file URI from the standard image media field
+//        $file_uri = $media->get('field_media_image')->entity?->getFileUri();
+
+        // if ($file_uri) {
+            // 4. Generate absolute image URL
+           // $image_url = \Drupal::service('file_url_generator')->generateAbsoluteString($file_uri);
+
+            // Output or use $image_url
+           //  echo $image_url;
+        // }
+    // }
+// }
+
 
 // end-of-class    
 }	
